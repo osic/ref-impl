@@ -1,0 +1,6 @@
+---
+glance_default_store: swift
+haproxy_use_keepalived: False
+#neutron_l2_population: True
+#tempest_public_subnet_cidr: 172.22.112.0/22
+#nova_console_type: novnc

@@ -1,0 +1,41 @@
+---
+shared-infra_hosts:
+  infra01:
+    ip: 172.22.100.23
+  infra02:
+    ip: 172.22.100.24
+  infra03:
+    ip: 172.22.100.25
+
+os-infra_hosts:
+  infra01:
+    ip: 172.22.100.23
+  infra02:
+    ip: 172.22.100.24
+  infra03:
+    ip: 172.22.100.25
+
+storage-infra_hosts:
+  infra01:
+    ip: 172.22.100.23
+  infra02:
+    ip: 172.22.100.24
+  infra03:
+    ip: 172.22.100.25
+
+repo-infra_hosts:
+  infra01:
+    ip: 172.22.100.23
+  infra02:
+    ip: 172.22.100.24
+  infra03:
+    ip: 172.22.100.25
+
+identity_hosts:
+  infra01:
+    ip: 172.22.100.23
+  infra02:
+    ip: 172.22.100.24
+  infra03:
+    ip: 172.22.100.25
+

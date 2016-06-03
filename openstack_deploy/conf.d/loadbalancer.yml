@@ -1,0 +1,4 @@
+---
+haproxy_hosts:
+  infra01:
+    ip: 172.22.100.23

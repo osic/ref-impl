@@ -1,0 +1,27 @@
+---
+
+- name: Create network interfaces file
+  hosts: '{{ target | default(all) }}'
+  remote_user: root
+  become: yes
+
+  tasks:
+  - name: Ensure files in interfaces.d are loaded
+    lineinfile:
+      dest: /etc/network/interfaces
+      state: present
+      line: 'source /etc/network/interfaces.d/*.cfg'
+      insertafter: 'For more information'
+
+  - name: Create os-refimpl-devices.cfg
+    template:
+      src: templates/os-refimpl-devices.cfg.j2
+      dest: /etc/network/interfaces.d/os-refimpl-devices.cfg
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Bring interfaces up
+    command: ifup p1p2
+    command: ifup p4p1
+    command: ifup p4p2

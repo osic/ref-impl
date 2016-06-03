@@ -1,0 +1,69 @@
+global_overrides:
+  swift:
+    part_power: 8
+    storage_network: 'br-storage'
+    replication_network: 'br-storage'
+    drives:
+      - name: sdb
+      - name: sdc
+      - name: sdd
+      - name: sde
+      - name: sdf
+      - name: sdg
+      - name: sdh
+      - name: sdi
+      - name: sdj
+      - name: sdk
+    mount_point: /srv/node
+    storage_policies:
+      - policy:
+          name: default
+          index: 0
+          default: True
+
+swift-proxy_hosts:
+  infra01:
+    ip: 172.22.0.23
+    container_vars:
+      swift_proxy_vars:
+        read_affinity: "r1=100"
+        write_affinity: "r1"
+        write_affinity_node_count: "2 * replicas"
+  infra02:
+    ip: 172.22.0.24
+    container_vars:
+      swift_proxy_vars:
+        read_affinity: "r2=100"
+        write_affinity: "r2"
+        write_affinity_node_count: "2 * replicas"
+  infra03:
+    ip: 172.22.0.25
+    container_vars:
+      swift_proxy_vars:
+        read_affinity: "r3=100"
+        write_affinity: "r3"
+        write_affinity_node_count: "2 * replicas"
+
+swift_hosts:
+  swift01:
+    ip: 172.22.100.40
+    container_vars:
+      swift_vars:
+        limit_container_types: swift
+        zone: 0
+        region: 1
+  swift02:
+    ip: 172.22.100.42
+    container_vars:
+      swift_vars:
+        limit_container_types: swift
+        zone: 0
+        region: 1
+  swift03:
+    ip: 172.22.100.43
+    container_vars:
+      swift_vars:
+        limit_container_types: swift
+        zone: 0
+        region: 1
+

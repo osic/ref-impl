@@ -1,0 +1,18 @@
+---
+compute_hosts:
+  compute01:
+    ip: 172.22.100.29
+  compute02:
+    ip: 172.22.100.30
+  compute03:
+    ip: 172.22.100.31
+  compute04:
+    ip: 172.22.100.32
+  compute05:
+    ip: 172.22.100.33
+  compute06:
+    ip: 172.22.100.34
+  compute07:
+    ip: 172.22.100.35
+  compute08:
+    ip: 172.22.100.36

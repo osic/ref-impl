@@ -1,0 +1,76 @@
+---
+# 830 - MANAGEMENT_NET - 172.22.100.0/22
+# 831 - STORAGE_NET    - 172.22.104.0/22
+# 832 - OVERLAY_NET    - 172.22.108.0/22
+# 833 - FLAT_NET       - 172.22.112.0/22
+
+cidr_networks:
+  container: 172.22.100.0/22
+  tunnel: 172.22.108.0/22
+  storage: 172.22.104.0/22
+
+used_ips:
+  - "172.22.100.0,172.22.100.200"
+  - "172.22.104.0,172.22.104.200"
+  - "172.22.108.0,172.22.108.200"
+  - "172.22.112.0,172.22.112.200"
+
+global_overrides:
+  internal_lb_vip_address: "172.22.100.23"
+  external_lb_vip_address: "172.22.112.23"
+  tunnel_bridge: "br-vxlan"
+  management_bridge: "br-mgmt"
+  provider_networks:
+    - network:
+        container_bridge: "br-mgmt"
+        container_type: "veth"
+        container_interface: "eth1"
+        ip_from_q: "container"
+        type: "raw"
+        group_binds:
+          - all_containers
+          - hosts
+        is_container_address: true
+        is_ssh_address: true
+    - network:
+        container_bridge: "br-vxlan"
+        container_type: "veth"
+        container_interface: "eth10"
+        ##container_mtu: "9000"
+        ip_from_q: "tunnel"
+        type: "vxlan"
+        range: "1:1000"
+        net_name: "vxlan"
+        group_binds:
+          - neutron_linuxbridge_agent
+    - network:
+        container_bridge: "br-flat"
+        container_type: "veth"
+        container_interface: "eth12"
+        type: "flat"
+        net_name: "flat"
+        group_binds:
+          - neutron_linuxbridge_agent
+    - network:
+        container_bridge: "br-vlan"
+        container_type: "veth"
+        container_interface: "eth11"
+        type: "vlan"
+        range: "839:849"
+        net_name: "vlan"
+        group_binds:
+          - neutron_linuxbridge_agent
+    - network:
+        container_bridge: "br-storage"
+        container_type: "veth"
+        container_interface: "eth2"
+        ##container_mtu: "9000"
+        ip_from_q: "storage"
+        type: "raw"
+        group_binds:
+          - glance_api
+          - cinder_api
+          - cinder_volume
+          - nova_compute
+          # Uncomment the next line if using swift with a storage network.
+          #- swift_proxy

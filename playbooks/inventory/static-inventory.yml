@@ -1,0 +1,33 @@
+[controller]
+729427-controller01 ansible_ssh_host=172.22.0.25
+729426-controller02 ansible_ssh_host=172.22.0.26
+729425-controller03 ansible_ssh_host=172.22.0.27
+
+[network]
+729424-network01 ansible_ssh_host=172.22.0.28
+729423-network02 ansible_ssh_host=172.22.0.29
+
+[logging]
+729422-logging01 ansible_ssh_host=172.22.0.30
+
+[compute]
+729421-compute01 ansible_ssh_host=172.22.0.31
+729420-compute02 ansible_ssh_host=172.22.0.32
+729419-compute03 ansible_ssh_host=172.22.0.33
+729418-compute04 ansible_ssh_host=172.22.0.34
+729417-compute05 ansible_ssh_host=172.22.0.35
+729416-compute06 ansible_ssh_host=172.22.0.36
+729415-compute07 ansible_ssh_host=172.22.0.37
+729414-compute08 ansible_ssh_host=172.22.0.38
+729413-compute09 ansible_ssh_host=172.22.0.39
+
+[cinder]
+729412-cinder01 ansible_ssh_host=172.22.0.40
+729411-cinder02 ansible_ssh_host=172.22.0.41
+
+[swift]                                                                                                                                       729410-swift01 ansible_ssh_host=172.22.0.42
+729409-swift02 ansible_ssh_host=172.22.0.43
+729408-swift03 ansible_ssh_host=172.22.0.44
+
+[deploy]
+729429-deploy01 ansible_ssh_host=172.22.0.21

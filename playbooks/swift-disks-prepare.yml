@@ -1,0 +1,41 @@
+---
+
+- name: Prepare node disks
+  hosts: swift_hosts
+  remote_user: root
+  become: yes
+
+  vars_files:
+    - vars/swift_disks.yml
+
+  tasks:
+    - name: Install xfsprogs package
+      apt:
+        name: xfsprogs
+        state: present
+        update_cache: yes
+
+    - name: Create xfs filesystem on target disk partition
+      filesystem:
+        dev: "/dev/{{ item }}"
+        fstype: xfs
+        opts: "-f -i size=1024 -L {{ item }}"
+        force: yes
+      with_items: "{{ disks }}"
+
+    - name: Create mount point for disk
+      command: "mkdir -p /srv/node/{{ item }}"
+      with_items: "{{ disks }}"
+
+    - name: Add disk to fstab
+      lineinfile:
+        dest: /etc/fstab
+        line: "LABEL={{ item }} /srv/node/{{ item }} xfs noatime,nodiratime,nobarrier,logbufs=8,noauto 0 0"
+        insertafter: EOF
+        state: present
+      with_items: "{{ disks }}"
+
+    - name: Mount disk
+      command: "mount /dev/{{ item }} /srv/node/{{ item }}"
+      with_items: "{{ disks }}"
+
