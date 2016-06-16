@@ -1,0 +1,22 @@
+- name: Installation and setup of NewRelic
+  hosts: hosts
+  user: root
+  pre_tasks:
+  - name: create file if not present
+    file: path=/etc/apt/sources.list.d/newrelic.list state=touch owner=root
+  - name: add the newrelic apt-repo
+    lineinfile: dest=/etc/apt/sources.list.d/newrelic.list line="deb http://apt.newrelic.com/debian/ newrelic non-free"
+  - name: add New Relic GPG key
+    apt_key: url=https://download.newrelic.com/548C16BF.gpg state=present
+  - name: update cache and install server monitor package
+    apt: name=newrelic-sysmond update_cache=yes
+  - name: add license key to config file (/etc/newrelic/nrsysmond.cfg)
+    command: nrsysmond-config --set license_key=8ed1ab8ba220f809de45542ac71ec875efeb2dbd
+  - name: start newrelic daemon
+    command: /etc/init.d/newrelic-sysmond start
+  roles:
+    - role: "rsyslog_client"
+      rsyslog_client_log_rotate_file: newrelic_log_rotate
+      rsyslog_client_log_dir: "/var/log/newrelic"
+      rsyslog_client_config_name: "99-newrelic-rsyslog-client.conf"
+      tags: "newrelic-rsyslog-client"
