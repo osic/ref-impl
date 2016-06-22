@@ -47,11 +47,11 @@ Install necessary packages for deployment:
 #### install source and dependencies
 In the deployment host, clone the osic-ref-impl repo into /opt/osic-ref-impl
 
-    git clone https://github.com/raddaoui/osic-ref-impl.git /opt/osic-ref-impl
+    git clone https://github.com/osic/ref-impl.git /opt/osic-ref-impl
 
 Also, clone OSA repository into /opt/openstack_ansible
 
-  git clone -b TAG https://github.com/openstack/openstack-ansible.git /opt/openstack-ansible
+    git clone -b TAG https://github.com/openstack/openstack-ansible.git /opt/openstack-ansible
 
 Change to /opt/openstack-ansible directory
 
@@ -65,7 +65,7 @@ Copy the pair of public/private key used in the osic-prep container in /root/.ss
 
     cp /var/lib/lxc/osic-prep/rootfs/root/.ssh/id_rsa* /root/.ssh/
 
-copy the hosts inventory from the osic-prep container to /opt/osic-ref-impl/playbooks/inventory:
+Copy the hosts inventory from the osic-prep container to /opt/osic-ref-impl/playbooks/inventory:
 
     cp /var/lib/lxc/osic-prep/rootfs/root/osic-prep-ansible/hosts /opt/osic-ref-impl/playbooks/inventory/inventory/static-inventory.yml
 
