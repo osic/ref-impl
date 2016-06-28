@@ -50,7 +50,7 @@ A snippet is shown below:
 | DEFAULT | scrub_time    | time in seconds  to delay before performing a delete |          0      |                 43200                  |
 
 
-#### neutron
+#### neutron (neutron.conf, ml2_conf.ini)
 
 neutron uses Modular Layer 2 __ML2__ for its core plugin entrypoint to provide networks for tenants same as default.
 
