@@ -1,9 +1,3 @@
- VLAN TAGS
-# 830 - MANAGEMENT_NET - 172.22.100.0/22
-# 831 - STORAGE_NET    - 172.22.104.0/22
-# 832 - OVERLAY_NET    - 172.22.108.0/22
-# 833 - FLAT_NET       - 172.22.112.0/22
-
 auto p4p1
 iface p4p1 inet manual
 
@@ -24,17 +18,17 @@ iface bond0 inet manual
     bond-downdelay 200
     bond-updelay 200
 
-auto p4p1.833
-iface p4p1.833 inet manual
+auto p4p1.{{ flat_vlan }}
+iface p4p1.{{ flat_vlan }} inet manual
     vlan-raw-device p4p1
 
-iface bond0.830 inet manual
+iface bond0.{{ management_vlan }} inet manual
     vlan-raw-device bond0
 
-iface bond0.831 inet manual
+iface bond0.{{ storage_vlan }} inet manual
     vlan-raw-device bond0
 
-iface bond0.832 inet manual
+iface bond0.{{ overlay_vlan }} inet manual
     vlan-raw-device bond0
 
 auto br-flat
@@ -42,8 +36,8 @@ iface br-flat inet static
     bridge_stp off
     bridge_waitport 10
     bridge_fd 0
-    bridge_ports p4p1.833
-    address 172.22.112.{{ ansible_ssh_host.split('.')[-1] }}
+    bridge_ports p4p1.{{ flat_vlan }}
+    address {{ flat_network.split('.')[0:3] | join('.') }}.{{ ansible_ssh_host.split('.')[-1] }}
     netmask 255.255.252.0
     offload-sg off
 
@@ -52,8 +46,8 @@ iface br-mgmt inet static
     bridge_stp off
     bridge_waitport 10
     bridge_fd 0
-    bridge_ports bond0.830
-    address 172.22.100.{{ ansible_ssh_host.split('.')[-1] }}
+    bridge_ports bond0.{{ management_vlan }}
+    address {{ management_network.split('.')[0:3] | join('.')}}.{{ ansible_ssh_host.split('.')[-1] }}
     netmask 255.255.252.0
     offload-sg off
 
@@ -62,8 +56,8 @@ iface br-storage inet static
     bridge_stp off
     bridge_waitport 10
     bridge_fd 0
-    bridge_ports bond0.831
-    address 172.22.104.{{ ansible_ssh_host.split('.')[-1] }}
+    bridge_ports bond0.{{ storage_vlan }}
+    address {{ storage_network.split('.')[0:3] | join('.') }}.{{ ansible_ssh_host.split('.')[-1] }}
     netmask 255.255.252.0
     offload-sg off
 
@@ -72,8 +66,8 @@ iface br-vxlan inet static
     bridge_stp off
     bridge_waitport 10
     bridge_fd 0
-    bridge_ports bond0.832
-    address 172.22.108.{{ ansible_ssh_host.split('.')[-1] }}
+    bridge_ports bond0.{{ overlay_vlan }}
+    address {{ overlay_network.split('.')[0:3] | join('.') }}.{{ ansible_ssh_host.split('.')[-1] }}
     netmask 255.255.252.0
     offload-sg off
 

@@ -1,0 +1,18 @@
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+auto p1p1
+iface p1p1 inet manual
+
+# Container Bridge
+auto br-pxe
+iface br-pxe inet static
+address 172.22.0.{{ ansible_ssh_host.split('.')[-1] }}
+netmask 255.255.252.0
+gateway 172.22.0.1
+dns-nameservers 8.8.8.8 8.8.4.4
+bridge_ports p1p1
+bridge_stp off
+bridge_waitport 0
+bridge_fd 0

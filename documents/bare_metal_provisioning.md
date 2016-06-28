@@ -21,6 +21,8 @@ First, download a [modified Ubuntu Server 14.04.3 ISO](http://public.thornelabs.
 
 Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
+__Note:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI.
+
 Once the deployment host is booted to the ISO, follow these steps to begin installation:
 
 1. Select __Language__
@@ -42,7 +44,7 @@ Once the deployment host is booted to the ISO, follow these steps to begin insta
    * Configure the keyboard
    * Configure the network
 
-  DHCP detection will fail. You will need to manually select the proper network interface - typically __p1p1__ - and manually configure networking on the __PXE__ network (refer to your onboarding email to find the __PXE__ network information).
+  DHCP detection will fail. You will need to manually select the proper network interface - typically __p1p1__ - and manually configure networking on the __PXE__ network (refer to your onboarding email to find the __PXE__ network information). When asked for name servers, type 8.8.8.8 8.8.4.4.
 
 Once networking is configured, the Preseed file will be downloaded. The remainder of the Ubuntu install will be unattended.
 
@@ -73,7 +75,7 @@ First, install the necessary packages:
 
     apt-get install vlan bridge-utils
 
-Reconfigure the network interface file to match the following (your IP addresses and ports will most likely be different):
+Reconfigure the network interface file __/etc/network/interfaces__ to match the following (your IP addresses and ports will most likely be different):
 
     # The loopback network interface
     auto lo
@@ -120,7 +122,7 @@ Move the LXC container directory into the proper directory:
 
     mv /root/osic-prep /var/lib/lxc/
 
-Once moved, the LXC container should be stopped, verify by running `lxc-ls -f`. Before starting it, open __/var/lib/lxc/osic-prep/config__ and change __lxc.network.ipv4 = 172.22.0.22/22__ to the PXE network you are using. Do not forget to set the CIDR notation as well. If your PXE network already is __172.22.0.22/22__, you do not need to make further changes.
+Once moved, the LXC container should be stopped, verify by running `lxc-ls -f`. Before starting it, open __/var/lib/lxc/osic-prep/config__ and change __lxc.network.ipv4 = 172.22.0.22/22__ to a valid IP address from the PXE network you are using. Do not forget to set the CIDR notation as well. If your PXE network already is __172.22.0.22/22__, you do not need to make further changes.
 
     lxc.network.type = veth
     lxc.network.name = eth1
@@ -194,50 +196,44 @@ PXE Boot the Servers
 
 ### Gather MAC Addresses
 
+Go to root home directory
+
+    cd /root
+
 You will need to obtain the MAC address of the network interface (e.g. p1p1) configured to PXE boot on every server. Be sure the MAC addresses are mapped to their respective hostname.
 
 You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. Use the information from your onboarding email to create the CSV.
 
 For example:
 
-    729427-controller01,10.15.243.158
-    729426-controller02,10.15.243.157
-    729425-controller03,10.15.243.156
-    729424-network01,10.15.243.155
-    729423-network02,10.15.243.154
-    729422-logging01,10.15.243.153
-    729421-compute01,10.15.243.152
-    729420-compute02,10.15.243.151
-    729419-compute03,10.15.243.150
-    729418-compute04,10.15.243.149
-    729417-compute05,10.15.243.148
-    729416-compute06,10.15.243.147
-    729415-compute07,10.15.243.146
-    729414-compute08,10.15.243.145
-    729413-compute09,10.15.243.144
-    729412-cinder01,10.15.243.143
-    729411-cinder02,10.15.243.142
-    729410-swift01,10.15.243.141
-    729409-swift02,10.15.243.140
-    729408-swift03,10.15.243.139
+    729427-controller01,10.15.243.158,controller
+    729426-controller02,10.15.243.157,controller
+    729425-controller03,10.15.243.156,controller
+    729424-logging01,10.15.243.155,logging
+    729423-logging02,10.15.243.154,logging
+    729422-logging03,10.15.243.153,logging
+    729421-compute01,10.15.243.152,compute
+    729420-compute02,10.15.243.151,compute
+    729419-compute03,10.15.243.150,compute
+    729418-compute04,10.15.243.149,compute
+    729417-compute05,10.15.243.148,compute
+    729416-compute06,10.15.243.147,compute
+    729415-compute07,10.15.243.146,compute
+    729414-compute08,10.15.243.145,compute
+    729413-cinder01,10.15.243.144,cinder
+    729412-cinder02,10.15.243.143,cinder
+    729411-cinder03,10.15.243.142,cinder
+    729410-swift01,10.15.243.141,swift
+    729409-swift02,10.15.243.140,swift
+    729408-swift03,10.15.243.139,swift
 
 I recommend removing the deployment host you manually provisioned from this CSV so you do not accidentally reboot the host you are working from.
-
-Once the CSV file is created, you can loop through each iLO to obtain the MAC address of the network interface configured to PXE boot with the following command:
-
-    for i in $(cat ilo.csv)
-    do
-    NAME=$(echo $i | cut -d',' -f1)
-    IP=$(echo $i | cut -d',' -f2)
-    MAC=$(sshpass -p calvincalvin ssh -o StrictHostKeyChecking=no root@$IP show /system1/network1/Integrated_NICs | grep Port1 | cut -d'=' -f 2)
-    echo "$NAME,$MAC"
-    done
 
 Once this information is collected, it will be used to create another CSV file that will be the input for many different steps in the build process.
 
 ### Create Input CSV
 
-Create a CSV named __input.csv__ in the following format. Use whatever text editor foo you have to create the CSV file.
+Now, we will create a CSV named __input.csv__ in the following format.
 
     hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
 
@@ -261,6 +257,37 @@ An example for openstack-ansible or RPC-O installations:
     744825-object01.example.com,A0:36:9F:7F:70:C1,10.240.0.58,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
     744826-object02.example.com,A0:36:9F:7F:6A:C2,10.240.0.59,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
     744827-object03.example.com,A0:36:9F:82:8C:E3,10.240.0.60,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+
+To do just that, the following command will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
+
+__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1).
+
+    COUNT=23
+    for i in $(cat ilo.csv)
+    do
+        NAME=`echo $i | cut -d',' -f1`
+        IP=`echo $i | cut -d',' -f2`
+        TYPE=`echo $i | cut -d',' -f3`
+
+        case "$TYPE" in
+            cinder)
+                SEED='ubuntu-14.04.3-server-unattended-osic-cinder'
+                ;;
+            swift)
+                SEED='ubuntu-14.04.3-server-unattended-osic-swift'
+                ;;
+            *)
+            SEED='ubuntu-14.04.3-server-unattended-osic-generic'
+                ;;
+        esac
+        MAC=`sshpass -p calvincalvin ssh -o StrictHostKeyChecking=no root@$IP show /system1/network1/Integrated_NICs | grep Port1 | cut -d'=' -f2`
+        #hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
+        echo "$NAME,${MAC//[$'\t\r\n ']},172.22.0.$COUNT,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,$SEED" | tee -a input.csv
+
+        (( COUNT++ ))
+    done
+
+
 
 ### Assigning a Cobbler Profile
 
@@ -305,6 +332,8 @@ To begin PXE booting, reboot all of the servers with the following command (if t
     ipmitool -I lanplus -H $IP -U root -P calvincalvin power reset
     done
 
+__NOTE:__ if the servers are already shutted down, you might want to change __power reset__ with __power on__ in the above command.
+
 As the servers finish PXE booting, a call will be made to the cobbler API to ensure the server does not PXE boot again.
 
 To quickly see which servers are still set to PXE boot, run the following command:
@@ -318,6 +347,11 @@ To quickly see which servers are still set to PXE boot, run the following comman
     done
 
 Any server which returns __True__ has not yet PXE booted.
+
+__NOTE__: In case you want to repxeboot servers, make sure to clean old settings from cobbler with the following command:
+
+    for i in `cobbler system list`; do cobbler system remove --name $i; done;
+
 
 Bootstrapping the Servers
 -------------------------

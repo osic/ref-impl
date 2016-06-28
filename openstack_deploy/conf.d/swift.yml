@@ -23,21 +23,21 @@ global_overrides:
 
 swift-proxy_hosts:
   infra01:
-    ip: 172.22.0.23
+    ip: 172.22.100.23
     container_vars:
       swift_proxy_vars:
         read_affinity: "r1=100"
         write_affinity: "r1"
         write_affinity_node_count: "2 * replicas"
   infra02:
-    ip: 172.22.0.24
+    ip: 172.22.100.24
     container_vars:
       swift_proxy_vars:
         read_affinity: "r2=100"
         write_affinity: "r2"
         write_affinity_node_count: "2 * replicas"
   infra03:
-    ip: 172.22.0.25
+    ip: 172.22.100.25
     container_vars:
       swift_proxy_vars:
         read_affinity: "r3=100"

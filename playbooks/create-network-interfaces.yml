@@ -4,8 +4,18 @@
   hosts: '{{ target | default(all) }}'
   remote_user: root
   become: yes
+  vars_files:
+    - vars/vlan_network_mapping.yml 
 
   tasks:
+  - name: make host ip static
+    template:
+      src: templates/interfaces.cfg.j2
+      dest: /etc/network/interfaces
+      owner: root
+      group: root
+      mode: 0644
+
   - name: Ensure files in interfaces.d are loaded
     lineinfile:
       dest: /etc/network/interfaces
@@ -21,7 +31,5 @@
       group: root
       mode: 0644
 
-  - name: Bring interfaces up
-    command: ifup p1p2
-    command: ifup p4p1
-    command: ifup p4p2
+  - name: reboot servers
+    shell: reboot

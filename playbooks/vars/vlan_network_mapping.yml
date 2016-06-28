@@ -1,0 +1,12 @@
+# 830 - MANAGEMENT_NET - 172.22.100.0/22
+# 831 - STORAGE_NET    - 172.22.104.0/22
+# 832 - OVERLAY_NET    - 172.22.108.0/22
+# 833 - FLAT_NET       - 172.22.112.0/22
+management_vlan: 830
+management_network: 172.22.100.0/22
+storage_vlan: 831
+storage_network: 172.22.104.0/22
+overlay_vlan: 832
+overlay_network: 172.22.108.0/22
+flat_vlan: 833
+flat_network: 172.22.112.0/22

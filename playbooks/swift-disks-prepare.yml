@@ -1,12 +1,12 @@
 ---
 
 - name: Prepare node disks
-  hosts: swift_hosts
+  hosts: swift
   remote_user: root
   become: yes
 
   vars_files:
-    - vars/swift_disks.yml
+    - vars/swift-disks.yml
 
   tasks:
     - name: Install xfsprogs package

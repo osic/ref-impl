@@ -1,12 +1,12 @@
 ---
 - hosts: all
   tasks:
-  - name: Add SSH public keys to root user
-    authorized_key:
-      user=root
-      key="{{ item }}"
-    with_file:
-      - files/public_keys/osic-prep
+#  - name: Add SSH public keys to root user
+#    authorized_key:
+#      user=root
+#      key="{{ item }}"
+#    with_file:
+#      - files/public_keys/osic-prep
 
 #  - name: Add users from host_vars file
 #    action: user name={{ item.key }} password={{ item.value.password }} shell={{ item.value.shell }} update_password=always
