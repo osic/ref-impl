@@ -52,13 +52,17 @@ A snippet is shown below:
 
 #### neutron
 
-neutron uses Modlula Layer 2 __ML2__ same as default for its core plugin entrypoint to provide networks for tenants in __neutron.conf__.
+neutron uses Modular Layer 2 __ML2__ for its core plugin entrypoint to provide networks for tenants same as default.
+
+In __neutron.conf__:
 
     core_plugin = neutron.plugins.ml2.plugin.Ml2Plugin
 
 
-Now, since OSA uses linux bridges as it main mechanism driver to build networks ,The ML2 plugin is configured to use the Linux bridge mechanism to build 
-layer2 virtual networking infrastructure for instances in __/etc/neutron/plugins/ml2/ml2_conf.ini__
+Now, since OSA uses linux bridges as its main mechanism driver to build networks ,The ML2 plugin is configured to use the Linux bridge mechanism to build 
+layer2 virtual networking infrastructure for instances.
+
+In __/etc/neutron/plugins/ml2/ml2_conf.ini__
 
     mechanism_drivers = linuxbridge,l2population
 
