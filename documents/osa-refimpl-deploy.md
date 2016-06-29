@@ -51,7 +51,7 @@ In the deployment host, clone the ref-impl repo into /opt/osic-ref-impl
 
 Also, clone OSA repository into /opt/openstack_ansible
 
-  git clone -b stable/mitaka https://github.com/openstack/openstack-ansible.git /opt/openstack-ansible
+    git clone -b stable/mitaka https://github.com/openstack/openstack-ansible.git /opt/openstack-ansible
 
 Change to /opt/openstack-ansible directory
 
@@ -114,7 +114,7 @@ This section will setup bonded interfaces and add bridges to target hosts to sep
 Deployment host should also have an interface on the same network allocated for container management. This interface will be used to connect and manage all target hosts and their hosted containers that will be created later by OSA.
 
 
-First open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match network configurations.
+First open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations.
 
 Then execute the following command:
 
