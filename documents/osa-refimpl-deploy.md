@@ -24,7 +24,7 @@ By end of this chapter, keeping current configurations you will have an OpenStac
 - Three cinder hosts
 - Three swift hosts
 
-Network layout between nodes will be as follows:
+Network layout between nodes will be as follows but you most likely will need to change them according to your provided networks:
 
 | Network type       | Subnet          | Vlan     |
 |--------------------|-----------------|----------|
