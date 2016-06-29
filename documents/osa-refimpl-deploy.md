@@ -45,9 +45,9 @@ Install necessary packages for deployment:
     apt-get install aptitude build-essential git ntp ntpdate openssh-server python-dev sudo
 
 #### install source and dependencies
-In the deployment host, clone the osic-ref-impl repo into /opt/osic-ref-impl
+In the deployment host, clone the ref-impl repo into /opt/osic-ref-impl
 
-    git clone https://github.com/raddaoui/osic-ref-impl.git /opt/osic-ref-impl
+    git clone https://github.com/osic/ref-impl.git /opt/osic-ref-impl
 
 Also, clone OSA repository into /opt/openstack_ansible
 
@@ -109,9 +109,14 @@ Format disks for Swift to the XFS file sytem and mount them to /srv/node on each
 
 #### configure Network for target hosts (deployment included)
 
-Setup bonded interfaces and add bridges to target hosts to separate different traffics in vlans.
+This section will setup bonded interfaces and add bridges to target hosts to separate different traffics in vlans.
 
-Deployment host should have an interface on the same network allocated for container management. This interface will be used to connect and manage all target hosts and their hosted containers that will be created later by OSA.
+Deployment host should also have an interface on the same network allocated for container management. This interface will be used to connect and manage all target hosts and their hosted containers that will be created later by OSA.
+
+
+First open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match network configurations.
+
+Then execute the following command:
 
     ansible-playbook -i inventory/static-inventory.yml create-network-interfaces.yml -e "target=all"
 
