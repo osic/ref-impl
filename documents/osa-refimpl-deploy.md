@@ -67,7 +67,7 @@ Copy the pair of public/private key used in the osic-prep container in /root/.ss
 
 copy the hosts inventory from the osic-prep container to /opt/osic-ref-impl/playbooks/inventory:
 
-    cp /var/lib/lxc/osic-prep/rootfs/root/osic-prep-ansible/hosts /opt/osic-ref-impl/playbooks/inventory/inventory/static-inventory.yml
+    cp /var/lib/lxc/osic-prep/rootfs/root/osic-prep-ansible/hosts /opt/osic-ref-impl/playbooks/inventory/static-inventory.yml
 
 Make sure you include the deployment host in __static-inventory.yml__ as follows:
 
