@@ -8,9 +8,9 @@ iface p1p1 inet manual
 # Container Bridge
 auto br-pxe
 iface br-pxe inet static
-address 172.22.0.{{ ansible_ssh_host.split('.')[-1] }}
+address {{ pxe_network.split('.')[0:3] | join('.') }}.{{ ansible_ssh_host.split('.')[-1] }}
 netmask 255.255.252.0
-gateway 172.22.0.1
+gateway {{ pxe_network.split('.')[0:3] | join('.') }}.1
 dns-nameservers 8.8.8.8 8.8.4.4
 bridge_ports p1p1
 bridge_stp off

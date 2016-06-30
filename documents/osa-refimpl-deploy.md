@@ -78,6 +78,10 @@ Copy all of the servers SSH fingerprints from the LXC container osic-prep known_
 
     cp /var/lib/lxc/osic-prep/rootfs/root/.ssh/known_hosts /root/.ssh/known_hosts
 
+Copy public key to authorized_key file in deployment host to allow ssh locally
+
+    cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
+
 Prepare target hosts
 -----------------------
 
