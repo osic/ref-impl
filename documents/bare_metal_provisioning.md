@@ -4,11 +4,11 @@ OSIC Deployment Process
 Table of Contents
 -----------------
 
-* [Provisioning the Deployment Host](https://gist.github.com/jameswthorne/6b2498baf438392feeda#provisioning-the-deployment-host)
-* [Download and Setup the osic-prep LXC Container](https://gist.github.com/jameswthorne/6b2498baf438392feeda#download-and-setup-the-osic-prep-lxc-container)
-* [PXE Boot the Servers](https://gist.github.com/jameswthorne/6b2498baf438392feeda#pxe-boot-the-servers)
-* [Bootstrapping the Servers](https://gist.github.com/jameswthorne/6b2498baf438392feeda#bootstrapping-the-servers)
-* [Create the osic-prep LXC Container](https://gist.github.com/jameswthorne/6b2498baf438392feeda#create-the-osic-prep-lxc-container)
+* [Provisioning the Deployment Host](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#provisioning-the-deployment-host)
+* [Download and Setup the osic-prep LXC Container](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#download-and-setup-the-osic-prep-lxc-container)
+* [PXE Boot the Servers](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#pxe-boot-the-servers)
+* [Bootstrapping the Servers](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#bootstrapping-the-servers)
+* [Create the osic-prep LXC Container](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#create-the-osic-prep-lxc-container)
 
 Provisioning the Deployment Host
 --------------------------------
