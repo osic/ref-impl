@@ -33,7 +33,7 @@ Once the deployment host is booted to the ISO, follow these steps to begin insta
 
 4. Scroll to the beginning of the line and delete __file=/cdrom/preseed/ubuntu-server.seed__.
 
-5. Type __preseed/url=https://github.com/osic/ref-impl/blob/master/files/ubuntu-server-14.04-unattended-iso-osic-generic.seed__
+5. Type __preseed/url=https://github.com/osic/ref-impl/blob/master/files/ubuntu-server-14.04.seed__
 
 6. Hit __Enter__ to begin the install process.
 
