@@ -112,7 +112,7 @@ Change into root's home directory:
 
 Download the LXC container to the deployment host:
 
-    wget http://public.thornelabs.net/osic-prep-lxc-container.tar.gz
+    wget http://23.253.105.87/osic.tar.gz
     
 Untar the LXC container:
 
