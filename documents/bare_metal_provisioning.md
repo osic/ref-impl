@@ -116,7 +116,7 @@ Download the LXC container to the deployment host:
     
 Untar the LXC container:
 
-    tar xvzf /root/osic-prep-lxc-container.tar.gz
+    tar xvzf /root/osic.tar.gz
     
 Move the LXC container directory into the proper directory:
 
@@ -163,25 +163,6 @@ Open __/etc/cobbler/dhcp.template__ and reconfigure your DHCP settings. You will
          max-lease-time             43200;
          next-server                $next_server;
 
-Pull updates for __osic-prep-ansible__:
-
-    cd /root/osic-prep-ansible
-
-    git pull origin master
-
-This is optional, create the roles directory and download the __rpc_networking__ Playbook:
-
-    mkdir -p /root/osic-prep-ansible/playbooks/roles
-
-    cd /root/osic-prep-ansible/playbooks/roles
-
-    git clone https://github.com/jameswthorne/ansible-role-rpc_networking.git rpc_networking
-
-Pull updates for __osic-preseeds__:
-
-    cd /opt/osic-preseeds
-    
-    git pull origin master
 
 Finally, restart Cobbler and sync it:
 
