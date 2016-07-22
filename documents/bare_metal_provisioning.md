@@ -19,9 +19,9 @@ You have been allocated a certain number of bare metal servers. There is current
 
 First, download a [modified Ubuntu Server 14.04.3 ISO](http://public.thornelabs.net/ubuntu-14.04.3-server-i40e-hp-raid-x86_64.iso). The modified Ubuntu Server ISO contains i40e driver version 1.3.47 and HP iLO tools.
 
-Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
+Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest. Before you begin __be sure you have unselected or removed the ISO__ so that future server reboots do not continue to use it to boot.
 
-__Note:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI.
+__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI.
 
 Once the deployment host is booted to the ISO, follow these steps to begin installation:
 
@@ -46,7 +46,13 @@ Once the deployment host is booted to the ISO, follow these steps to begin insta
 
   DHCP detection will fail. You will need to manually select the proper network interface - typically __p1p1__ - and manually configure networking on the __PXE__ network (refer to your onboarding email to find the __PXE__ network information). When asked for name servers, type 8.8.8.8 8.8.4.4.
 
+  You may see an error stating:
+    "/dev/sda" contains GPT signatures, indicating that is had a GPT table... Is this a GPT partition table?
+  If you encounter this error select "No" and continue.
+
 Once networking is configured, the Preseed file will be downloaded. The remainder of the Ubuntu install will be unattended.
+
+Be sure you have unselected
 
 The Ubuntu install will be finished when the system reboots and a login prompt appears.
 
@@ -70,6 +76,8 @@ Next, you will download a pre-packaged LXC container that contains everything yo
 ### Setup LXC Linux Bridge
 
 In order to use the LXC container, a new bridge will need to be created: __br-pxe__.
+
+__NOTE: Follow these instructions very carefully.__
 
 First, install the necessary packages:
 
@@ -113,11 +121,11 @@ Change into root's home directory:
 Download the LXC container to the deployment host:
 
     wget http://23.253.105.87/osic.tar.gz
-    
+
 Untar the LXC container:
 
     tar xvzf /root/osic.tar.gz
-    
+
 Move the LXC container directory into the proper directory:
 
     mv /root/osic-prep /var/lib/lxc/
@@ -208,17 +216,19 @@ For example:
     729409-swift02,10.15.243.140,swift
     729408-swift03,10.15.243.139,swift
 
-I recommend removing the deployment host you manually provisioned from this CSV so you do not accidentally reboot the host you are working from.
+__NOTE:__ Be sure to remove any spaces in your CSV file.
+
+We also recommend removing the deployment host you manually provisioned from this CSV so you do not accidentally reboot the host you are working from.
 
 Once this information is collected, it will be used to create another CSV file that will be the input for many different steps in the build process.
 
 ### Create Input CSV
 
-Now, we will create a CSV named __input.csv__ in the following format.
+Now, we will use a script to create a CSV named __input.csv__ in the following format.
 
     hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
 
-If this will be an openstack-ansible or RPC-O installation, it is recommended to order the rows in the CSV file in the following order, otherwise order the rows however you wish:
+If this will be an openstack-ansible installation, it is recommended to order the rows in the CSV file in the following order, otherwise order the rows however you wish:
 
 1. Controller nodes
 2. Logging nodes
@@ -226,7 +236,7 @@ If this will be an openstack-ansible or RPC-O installation, it is recommended to
 4. Cinder nodes
 5. Swift nodes
 
-An example for openstack-ansible or RPC-O installations:
+An example for openstack-ansible installations:
 
     744800-infra01.example.com,A0:36:9F:7F:70:C0,10.240.0.51,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
     744819-infra02.example.com,A0:36:9F:7F:6A:C8,10.240.0.52,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
@@ -242,33 +252,32 @@ An example for openstack-ansible or RPC-O installations:
 To do just that, the following command will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
 
 __NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1).
+```
+COUNT=23
+for i in $(cat ilo.csv)
+do
+    NAME=`echo $i | cut -d',' -f1`
+    IP=`echo $i | cut -d',' -f2`
+    TYPE=`echo $i | cut -d',' -f3`
 
-    COUNT=23
-    for i in $(cat ilo.csv)
-    do
-        NAME=`echo $i | cut -d',' -f1`
-        IP=`echo $i | cut -d',' -f2`
-        TYPE=`echo $i | cut -d',' -f3`
+    case "$TYPE" in
+      cinder)
+            SEED='ubuntu-14.04.3-server-unattended-osic-cinder'
+            ;;
+        swift)
+            SEED='ubuntu-14.04.3-server-unattended-osic-swift'
+            ;;
+        *)
+        SEED='ubuntu-14.04.3-server-unattended-osic-generic'
+            ;;
+    esac
+    MAC=`sshpass -p calvincalvin ssh -o StrictHostKeyChecking=no root@$IP show /system1/network1/Integrated_NICs | grep Port1 | cut -d'=' -f2`
+    #hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
+    echo "$NAME,${MAC//[$'\t\r\n ']},172.22.0.$COUNT,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,$SEED" | tee -a input.csv
 
-        case "$TYPE" in
-            cinder)
-                SEED='ubuntu-14.04.3-server-unattended-osic-cinder'
-                ;;
-            swift)
-                SEED='ubuntu-14.04.3-server-unattended-osic-swift'
-                ;;
-            *)
-            SEED='ubuntu-14.04.3-server-unattended-osic-generic'
-                ;;
-        esac
-        MAC=`sshpass -p calvincalvin ssh -o StrictHostKeyChecking=no root@$IP show /system1/network1/Integrated_NICs | grep Port1 | cut -d'=' -f2`
-        #hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
-        echo "$NAME,${MAC//[$'\t\r\n ']},172.22.0.$COUNT,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,$SEED" | tee -a input.csv
-
-        (( COUNT++ ))
-    done
-
-
+    (( COUNT++ ))
+done
+```
 
 ### Assigning a Cobbler Profile
 
@@ -313,7 +322,7 @@ To begin PXE booting, reboot all of the servers with the following command (if t
     ipmitool -I lanplus -H $IP -U root -P calvincalvin power reset
     done
 
-__NOTE:__ if the servers are already shutted down, you might want to change __power reset__ with __power on__ in the above command.
+__NOTE:__ if the servers are already shut down, you might want to change __power reset__ with __power on__ in the above command.
 
 As the servers finish PXE booting, a call will be made to the cobbler API to ensure the server does not PXE boot again.
 
@@ -322,14 +331,14 @@ To quickly see which servers are still set to PXE boot, run the following comman
     for i in $(cobbler system list)
     do
     NETBOOT=$(cobbler system report --name $i | awk '/^Netboot/ {print $NF}')
-    if [[ ${NETBOOT} == True ]]; then 
+    if [[ ${NETBOOT} == True ]]; then
     echo -e "$i: netboot_enabled : ${NETBOOT}"
     fi
     done
 
 Any server which returns __True__ has not yet PXE booted.
 
-__NOTE__: In case you want to repxeboot servers, make sure to clean old settings from cobbler with the following command:
+__NOTE__: In case you want to re-pxeboot servers, make sure to clean old settings from cobbler with the following command:
 
     for i in `cobbler system list`; do cobbler system remove --name $i; done;
 
@@ -347,7 +356,7 @@ Start by running the `generate_ansible_hosts.py` Python script:
 
     python generate_ansible_hosts.py /root/input.csv > /root/osic-prep-ansible/hosts
 
-If this will be an openstack-ansible or RPC-O installation, organize the Ansible __hosts__ file into groups for __controller__, __logging__, __compute__, __cinder__, and __swift__, otherwise leave the Ansible __hosts__ file as it is and jump to the next section.
+If this will be an openstack-ansible installation, organize the Ansible __hosts__ file into groups for __controller__, __logging__, __compute__, __cinder__, and __swift__, otherwise leave the Ansible __hosts__ file as it is and jump to the next section.
 
 An example for openstack-ansible or RPC-O installations:
 
@@ -355,7 +364,7 @@ An example for openstack-ansible or RPC-O installations:
     744800-infra01.example.com ansible_ssh_host=10.240.0.51
     744819-infra02.example.com ansible_ssh_host=10.240.0.52
     744820-infra03.example.com ansible_ssh_host=10.240.0.53
-    
+
     [logging]
     744821-logging01.example.com ansible_ssh_host=10.240.0.54
 
@@ -407,7 +416,7 @@ Finally, run the bootstrap.yml Ansible Playbook:
 
 ### Clean Up LVM Logical Volumes
 
-If this will be an openstack-ansible or RPC-O installation, you will need to clean up particular LVM Logical Volumes.
+If this will be an openstack-ansible installation, you will need to clean up particular LVM Logical Volumes.
 
 Each server is provisioned with a standard set of LVM Logical Volumes. Not all servers need all of the LVM Logical Volumes. Clean them up with the following steps.
 
@@ -437,4 +446,4 @@ Finally, reboot all servers:
 
     ansible -i hosts all -m shell -a "reboot" --forks 25
 
-Once all servers reboot, you can begin installing openstack-ansible or RPC-O.
+Once all servers reboot, you can begin installing openstack-ansible.
