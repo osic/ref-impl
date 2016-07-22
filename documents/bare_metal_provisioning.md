@@ -19,9 +19,11 @@ You have been allocated a certain number of bare metal servers. There is current
 
 First, download a [modified Ubuntu Server 14.04.3 ISO](http://public.thornelabs.net/ubuntu-14.04.3-server-i40e-hp-raid-x86_64.iso). The modified Ubuntu Server ISO contains i40e driver version 1.3.47 and HP iLO tools.
 
-Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest. Before you begin __be sure you have unselected or removed the ISO__ so that future server reboots do not continue to use it to boot.
+Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
 __NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI.
+
+__Before you move on, be sure you have unselected or removed the ISO from the ILO console__ so that future server reboots do not continue to use it to boot.
 
 Once the deployment host is booted to the ISO, follow these steps to begin installation:
 
@@ -47,12 +49,10 @@ Once the deployment host is booted to the ISO, follow these steps to begin insta
   DHCP detection will fail. You will need to manually select the proper network interface - typically __p1p1__ - and manually configure networking on the __PXE__ network (refer to your onboarding email to find the __PXE__ network information). When asked for name servers, type 8.8.8.8 8.8.4.4.
 
   You may see an error stating:
-    "/dev/sda" contains GPT signatures, indicating that is had a GPT table... Is this a GPT partition table?
+    "/dev/sda" contains GPT signatures, indicating that it had a GPT table... Is this a GPT partition table?
   If you encounter this error select "No" and continue.
 
 Once networking is configured, the Preseed file will be downloaded. The remainder of the Ubuntu install will be unattended.
-
-Be sure you have unselected
 
 The Ubuntu install will be finished when the system reboots and a login prompt appears.
 
@@ -216,9 +216,7 @@ For example:
     729409-swift02,10.15.243.140,swift
     729408-swift03,10.15.243.139,swift
 
-__NOTE:__ Be sure to remove any spaces in your CSV file.
-
-We also recommend removing the deployment host you manually provisioned from this CSV so you do not accidentally reboot the host you are working from.
+Be sure to remove any spaces in your CSV file. We also recommend removing the deployment host you manually provisioned from this CSV so you do not accidentally reboot the host you are working from.
 
 Once this information is collected, it will be used to create another CSV file that will be the input for many different steps in the build process.
 
