@@ -98,7 +98,7 @@ Install software packages and load necessary dynamic kernel modules for networki
 #### Setting up storage devices.
 
 First, Determine storage devices on nodes that will be used for object storage, you can use commands like parted, fdisk or see directly in the /dev/ directory to find available disks.
-Then, list all disks under disks list in ./vars/swift-disks.yml
+Then, list all disks under disks list in /vars/swift-disks.yml
 
     disks:
       - sdb
@@ -170,4 +170,3 @@ Install OpenStack services (keystone, glane, cinder, nova, neutron, heat, horizo
 
 
 Congratulation! you have your OpenStack cluster running.
-
