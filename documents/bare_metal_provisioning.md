@@ -21,7 +21,7 @@ First, download a [modified Ubuntu Server 14.04.3 ISO](http://23.253.105.87/ubun
 
 Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
-__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After, to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded to your local directory and finally press on the __Power Switch__ tab and select __Reset__ to reboot the host.
+__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After, to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded to your local directory and finally press on the __Power Switch__ tab and select __Reset__ to reboot the host from the image.
 
 __Before you move on, be sure you have unselected or removed the ISO from the ILO console__ so that future server reboots do not continue to use it to boot.
 

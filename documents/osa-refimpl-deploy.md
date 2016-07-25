@@ -97,8 +97,9 @@ Install software packages and load necessary dynamic kernel modules for networki
 
 #### Setting up storage devices.
 
-First, Determine storage devices on nodes that will be used for object storage, you can use commands like parted, fdisk or see directly in the /dev/ directory to find available disks.
-Then, list all disks under disks list in vars/swift-disks.yml
+First, Determine storage devices on nodes that will be used for object storage. you can use commands like parted, fdisk or see directly in the /dev/ directory to find available disks. To do that, login to one of the swift nodes, list all disks by executing __sudo fdisk -l__. Available ones will be in the form of __/dev/sd<x>__ except __dev/sda__ since it hosts the Operating System.
+
+Then, add correct disks names under disks list in vars/swift-disks.yml
 
     disks:
       - sdb
