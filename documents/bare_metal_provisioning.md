@@ -21,7 +21,7 @@ First, download a [modified Ubuntu Server 14.04.3 ISO](http://public.thornelabs.
 
 Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
-__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI.
+__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded it from your local directory and finally press on the __Power Switch__ tab and select __Reset__.
 
 __Before you move on, be sure you have unselected or removed the ISO from the ILO console__ so that future server reboots do not continue to use it to boot.
 
@@ -249,7 +249,7 @@ An example for openstack-ansible installations:
 
 To do just that, the following command will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
 
-__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1).
+__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1) and make sure to change host-ip,host-netmask,host-gateway in the script(__172.22.0.$COUNT,255.255.252.0,172.22.0.1__)to match your host network configurations.
 ```
 COUNT=23
 for i in $(cat ilo.csv)
@@ -356,7 +356,7 @@ Start by running the `generate_ansible_hosts.py` Python script:
 
 If this will be an openstack-ansible installation, organize the Ansible __hosts__ file into groups for __controller__, __logging__, __compute__, __cinder__, and __swift__, otherwise leave the Ansible __hosts__ file as it is and jump to the next section.
 
-An example for openstack-ansible or RPC-O installations:
+An example for openstack-ansible installation:
 
     [controller]
     744800-infra01.example.com ansible_ssh_host=10.240.0.51
