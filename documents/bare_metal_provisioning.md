@@ -17,11 +17,11 @@ You have been allocated a certain number of bare metal servers. There is current
 
 ### Manually Provision the Deployment Host
 
-First, download a [modified Ubuntu Server 14.04.3 ISO](http://public.thornelabs.net/ubuntu-14.04.3-server-i40e-hp-raid-x86_64.iso). The modified Ubuntu Server ISO contains i40e driver version 1.3.47 and HP iLO tools.
+First, download a [modified Ubuntu Server 14.04.3 ISO](http://23.253.105.87/ubuntu-14.04.3-server-i40e-hp-raid-x86_64.iso). The modified Ubuntu Server ISO contains i40e driver version 1.3.47 and HP iLO tools.
 
 Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
-__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded it from your local directory and finally press on the __Power Switch__ tab and select __Reset__.
+__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After, to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded to your local directory and finally press on the __Power Switch__ tab and select __Reset__ to reboot the host.
 
 __Before you move on, be sure you have unselected or removed the ISO from the ILO console__ so that future server reboots do not continue to use it to boot.
 
