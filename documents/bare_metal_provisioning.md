@@ -23,7 +23,7 @@ Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iL
 
 __NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After, to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded to your local directory and finally press on the __Power Switch__ tab and select __Reset__ to reboot the host from the image.
 
-__Before you move on, be sure you have unselected or removed the ISO from the ILO console__ so that future server reboots do not continue to use it to boot.
+__Before you move on, be sure you have unselected or removed the Ubuntu ISO from the ILO console (unselect Image File CD/DVD-ROM from the Virtual Drives tab)__ so that future server reboots do not continue to use it to boot.
 
 Once the deployment host is booted to the ISO, follow these steps to begin installation:
 
@@ -130,7 +130,7 @@ Move the LXC container directory into the proper directory:
 
     mv /root/osic-prep /var/lib/lxc/
 
-Once moved, the LXC container should be stopped, verify by running `lxc-ls -f`. Before starting it, open __/var/lib/lxc/osic-prep/config__ and change __lxc.network.ipv4 = 172.22.0.22/22__ to a valid IP address from the PXE network you are using. Do not forget to set the CIDR notation as well. If your PXE network already is __172.22.0.22/22__, you do not need to make further changes.
+Once moved, the LXC container should be stopped, verify by running `lxc-ls -f`. Before starting it, open __/var/lib/lxc/osic-prep/config__ and change __lxc.network.ipv4 = 172.22.0.22/22__ to a free IP address from the PXE network you are using. Do not forget to set the CIDR notation as well. If your PXE network already is __172.22.0.22/22__, you do not need to make further changes.
 
     lxc.network.type = veth
     lxc.network.name = eth1
@@ -236,16 +236,16 @@ If this will be an openstack-ansible installation, it is recommended to order th
 
 An example for openstack-ansible installations:
 
-    744800-infra01.example.com,A0:36:9F:7F:70:C0,10.240.0.51,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744819-infra02.example.com,A0:36:9F:7F:6A:C8,10.240.0.52,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744820-infra03.example.com,A0:36:9F:82:8C:E8,10.240.0.53,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744821-logging01.example.com,A0:36:9F:82:8C:E9,10.240.0.54,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744822-compute01.example.com,A0:36:9F:82:8C:EA,10.240.0.55,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744823-compute02.example.com,A0:36:9F:82:8C:EB,10.240.0.56,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744824-cinder01.example.com,A0:36:9F:82:8C:EC,10.240.0.57,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-cinder
-    744825-object01.example.com,A0:36:9F:7F:70:C1,10.240.0.58,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
-    744826-object02.example.com,A0:36:9F:7F:6A:C2,10.240.0.59,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
-    744827-object03.example.com,A0:36:9F:82:8C:E3,10.240.0.60,255.255.252.0,10.240.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+    744800-infra01.example.com,A0:36:9F:7F:70:C0,172.22.0.23,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+    744819-infra02.example.com,A0:36:9F:7F:6A:C8,172.22.0.24,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+    744820-infra03.example.com,A0:36:9F:82:8C:E8,172.22.0.25,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+    744821-logging01.example.com,A0:36:9F:82:8C:E9,172.22.0.26,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+    744822-compute01.example.com,A0:36:9F:82:8C:EA,172.22.0.27,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+    744823-compute02.example.com,A0:36:9F:82:8C:EB,172.22.0.28,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+    744824-cinder01.example.com,A0:36:9F:82:8C:EC,172.22.0.29,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-cinder
+    744825-object01.example.com,A0:36:9F:7F:70:C1,172.22.0.30,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+    744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+    744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
 
 To do just that, the following command will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
 
@@ -277,6 +277,9 @@ do
 done
 ```
 
+__NOTE:__ before you continue, make sure the generated script __input.csv__ has all the information as shown in the example above. In case you run into some missing information, you may need to paste the above command in a bash script and execute it.
+
+ 
 ### Assigning a Cobbler Profile
 
 The last column in the CSV file specifies which Cobbler Profile to map the Cobbler System to. You have the following options:
@@ -344,7 +347,7 @@ __NOTE__: In case you want to re-pxeboot servers, make sure to clean old setting
 Bootstrapping the Servers
 -------------------------
 
-With the servers PXE booted, you will now need to bootstrap the servers.
+When all servers finish PXE booting, you will now need to bootstrap the servers.
 
 ### Generate Ansible Inventory
 

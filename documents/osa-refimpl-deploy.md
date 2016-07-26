@@ -97,7 +97,7 @@ Install software packages and load necessary dynamic kernel modules for networki
 
 #### Setting up storage devices.
 
-First, Determine storage devices on nodes that will be used for object storage. you can use commands like parted, fdisk or see directly in the /dev/ directory to find available disks. To do that, login to one of the swift nodes, list all disks by executing __sudo fdisk -l__. Available ones will be in the form of __/dev/sd\<x>__ except __dev/sda__ since it hosts the Operating System.
+First, Determine storage devices on nodes that will be used for object storage. To do that, login to one of the swift nodes, list all disks by executing __sudo fdisk -l__. Available disks will be in the form of __/dev/sd\<x>__ except __dev/sda__ since it hosts the Operating System.
 
 Then, add correct disks names under disks list in vars/swift-disks.yml
 
@@ -140,9 +140,9 @@ Change to /etc/openstack_deploy:
 
     cd /etc/openstack_deploy
 
-Check openstack_user_config.yml file and edit __cidr_networks__, __used_ips__, and __internal_lb_vip_address__ and __external_lb_vip_address__ according to your chosen network configurations.
+Check openstack_user_config.yml file and edit __cidr_networks__ to match your network configurations, __used_ips__ to exclude ip addresses from usage by OSA(ip addresses used by servers should be included here), and __internal_lb_vip_address__ and __external_lb_vip_address__ to ip addresses of one of the controller nodes belonging to Management and Flat Network respectively.
 
-Check __conf.d__ directory and edit files there to configure target hosts to match your environment (compute, log_hosts, storage_hosts, network_hosts...).
+Check files in __conf.d__ directory and edit ip addresses of different hosts under compute_hosts, log_hosts, storage_hosts, network_hosts... to match your environment layout. __infra hosts__ hosting infrastructure services are usually referencing controller hosts.
 
 Configure service credentials by filling the user_secrets.yml manually or through OSA provided script:
 
