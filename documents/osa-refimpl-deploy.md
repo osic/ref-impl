@@ -39,6 +39,8 @@ Network layout between nodes will be as follows but you most likely will need to
 Prepare deployment host
 -----------------------
 
+If you are still in the osic-prep container, exit to the host.
+
 #### configure operating system
 Install necessary packages for deployment:
 
