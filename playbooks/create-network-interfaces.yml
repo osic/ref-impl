@@ -31,5 +31,12 @@
       group: root
       mode: 0644
 
-  - name: reboot servers
-    shell: reboot
+  - name: Restart the network interfaces
+    command: "ifdown {{ item }}; ifup {{ item }}"
+    with_items:
+      - br-mgmt
+      - br-pxe
+      - br-flat
+      - br-storage
+      - br-vlan
+      - br-vxlan
