@@ -2,7 +2,7 @@
 # 831 - STORAGE_NET    - 172.22.104.0/22
 # 832 - OVERLAY_NET    - 172.22.108.0/22
 # 833 - FLAT_NET       - 172.22.112.0/22
-pxe_network: 172.22.4.0/22
+pxe_network: 172.22.0.0/22
 
 management_vlan: 830
 management_network: 172.22.100.0/22
