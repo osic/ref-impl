@@ -249,7 +249,7 @@ An example for openstack-ansible installations:
 
 To do just that, the following command will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
 
-__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1) and make sure to change host-ip,host-netmask,host-gateway in the script(__172.22.0.$COUNT,255.255.252.0,172.22.0.1__)to match your host network configurations.
+__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1) and make sure to change __host-ip,host-netmask,host-gateway__ in the script (__172.22.0.$COUNT,255.255.252.0,172.22.0.1__) to match your PXE network configurations.
 ```
 COUNT=23
 for i in $(cat ilo.csv)
