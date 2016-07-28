@@ -1,0 +1,57 @@
+.DS_Store
+.DS_Store?
+*.xpr
+.idea
+.eggs
+.Spotlight-V100
+.Trashes
+.idea
+.tox
+*.sublime*
+*.egg-info
+Icon?
+ehthumbs.db
+Thumbs.db
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+*.pyc
+build/
+dist/
+
+# Build results
+._*
+target/
+/www/output/
+/generated/
+.doctrees
+build/
+_build/
+/build-*.log.gz
+glossary.rst
+*.mo
+*.html
+
+# Python compiled files
+*.pyc
+
+# Ignore Vagrant Related Files
+acceptance_config.yml
+boxes/*
+/.vagrant
+
+# Testenvironment
+.tox/
+
+# Editors
+*~
+.*.swp
+
+# User driven backup files
+*.bak
+*.swp
