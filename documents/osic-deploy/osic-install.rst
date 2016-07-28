@@ -1,59 +1,68 @@
-Install LXC and Configure LXC Container
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+==============
+Installing LXC
+==============
 
-Install the necessary LXC package:
+#. Install the necessary LXC package:
 
-::
+   .. code::
 
-    apt-get install lxc
+      $ apt-get install lxc
 
-Change into root's home directory:
+#. Change into root's home directory:
 
-::
+   .. code::
 
-    cd /root
+      $ cd /root
 
-Download the LXC container to the deployment host:
+#. Download the LXC container to the deployment host:
 
-::
+   .. code::
 
-    wget http://23.253.105.87/osic.tar.gz
+      $ wget http://23.253.105.87/osic.tar.gz
 
-Untar the LXC container:
+#. Untar the LXC container:
 
-::
+   .. code::
 
-    tar xvzf /root/osic.tar.gz
+      $ tar xvzf /root/osic.tar.gz
 
-Move the LXC container directory into the proper directory:
+#. Move the LXC container directory into the proper directory:
 
-::
+   .. code::
 
-    mv /root/osic-prep /var/lib/lxc/
+      $ mv /root/osic-prep /var/lib/lxc/
 
-Once moved, the LXC container should be stopped, verify by running
-``lxc-ls -f``. Before starting it, open
-**/var/lib/lxc/osic-prep/config** and change **lxc.network.ipv4 =
-172.22.0.22/22** to a free IP address from the PXE network you are
-using. Do not forget to set the CIDR notation as well. If your PXE
-network already is **172.22.0.22/22**, you do not need to make further
-changes.
+#. Once moved, the LXC container should be stopped. You can verify this
+   by running:
 
-::
+   .. code::
+   
+      $ lxc-ls -f.
 
-    lxc.network.type = veth
-    lxc.network.name = eth1
-    lxc.network.ipv4 = 172.22.0.22/22
-    lxc.network.link = br-pxe
-    lxc.network.hwaddr = 00:16:3e:xx:xx:xx
-    lxc.network.flags = up
-    lxc.network.mtu = 1500
+#. Before starting it, open ``/var/lib/lxc/osic-prep/config`` and change
+   ``lxc.network.ipv4 = 172.22.0.22/22`` to a free IP address from the PXE
+   network you are using.
 
-Start the LXC container:
+   .. note::
+   
+      Do not forget to set the CIDR notation as well. If your PXE network already
+      is ``172.22.0.22/22``, you do not need to make further changes.
 
-::
+   .. code::
 
-    lxc-start -d --name osic-prep
+      lxc.network.type = veth
+      lxc.network.name = eth1
+      lxc.network.ipv4 = 172.22.0.22/22
+      lxc.network.link = br-pxe
+      lxc.network.hwaddr = 00:16:3e:xx:xx:xx
+      lxc.network.flags = up
+      lxc.network.mtu = 1500
 
-You should be able to ping the IP address you just set for the LXC
+#. Start the LXC container:
+
+   .. code::
+
+      $ lxc-start -d --name osic-prep
+
+You are now able to ping the IP address you just set for the LXC
 container from the host.
