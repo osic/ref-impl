@@ -2,50 +2,50 @@
 Installing LXC
 ==============
 
-#. Install the necessary LXC package:
+#. Install the required LXC package:
 
    .. code::
 
-      $ apt-get install lxc
+      # apt-get install lxc
 
-#. Change into root's home directory:
+#. Change to the /root directory:
 
    .. code::
 
-      $ cd /root
+      # cd /root
 
 #. Download the LXC container to the deployment host:
 
    .. code::
 
-      $ wget http://23.253.105.87/osic.tar.gz
+      # wget http://23.253.105.87/osic.tar.gz
 
 #. Untar the LXC container:
 
    .. code::
 
-      $ tar xvzf /root/osic.tar.gz
+      # tar xvzf /root/osic.tar.gz
 
-#. Move the LXC container directory into the proper directory:
+#. Move the LXC container directory into the LXC directory:
 
    .. code::
 
-      $ mv /root/osic-prep /var/lib/lxc/
+      # mv /root/osic-prep /var/lib/lxc/
 
-#. Once moved, the LXC container should be stopped. You can verify this
+#. After you move it, the LXC container should be stopped. Verify this
    by running:
 
    .. code::
-   
-      $ lxc-ls -f.
 
-#. Before starting it, open ``/var/lib/lxc/osic-prep/config`` and change
-   ``lxc.network.ipv4 = 172.22.0.22/22`` to a free IP address from the PXE
-   network you are using.
+      # lxc-ls -f
+
+#. Before starting the LXC container, edit
+   ``/var/lib/lxc/osic-prep/config`` and change ``lxc.network.ipv4 =
+   172.22.0.22/22`` to a free IP address from your PXE network.
 
    .. note::
-   
-      Do not forget to set the CIDR notation as well. If your PXE network already
+
+      Remember to set the CIDR notation. If your PXE network already
       is ``172.22.0.22/22``, you do not need to make further changes.
 
    .. code::
@@ -62,7 +62,7 @@ Installing LXC
 
    .. code::
 
-      $ lxc-start -d --name osic-prep
+      # lxc-start -d --name osic-prep
 
-You are now able to ping the IP address you just set for the LXC
-container from the host.
+Verify that you can ping the IP address for the LXC container from the
+host.
