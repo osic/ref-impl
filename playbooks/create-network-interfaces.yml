@@ -31,8 +31,8 @@
       group: root
       mode: 0644
 
-  - name: Restart the network interfaces
-    command: "ifdown {{ item }}; ifup {{ item }}"
+  - name: Bring the new network interfaces up
+    command: "ifup {{ item }}"
     with_items:
       - br-mgmt
       - br-pxe
