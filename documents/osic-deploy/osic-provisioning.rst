@@ -17,7 +17,7 @@ Manually provisioning the deployment host
 
 #. Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM,
    iDRAC, or iLO.
-   To get an access to a server console through ILO, find the host iLO IP
+   To get an access to a server console through iLO, find the host iLO IP
    address through a web browser:
 
    #. Log in with the credentials provided.
