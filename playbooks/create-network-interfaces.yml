@@ -1,7 +1,6 @@
 ---
-
 - name: Create network interfaces file
-  hosts: '{{ target | default(all) }}'
+  hosts: 'all'
   remote_user: root
   become: yes
   vars_files:
@@ -31,12 +30,16 @@
       group: root
       mode: 0644
 
-  - name: Bring the new network interfaces up
-    command: "ifup {{ item }}"
-    with_items:
-      - br-mgmt
-      - br-pxe
-      - br-flat
-      - br-storage
-      - br-vlan
-      - br-vxlan
+- name: reboot servers except deployment
+  hosts: 'all:!deploy'
+  remote_user: root
+  become: yes
+  tasks:
+  - command: reboot
+
+- name: reboot deployment host
+  hosts: 'deploy'
+  remote_user: root
+  become: yes
+  tasks:
+  - command: reboot

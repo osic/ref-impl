@@ -125,7 +125,9 @@ First open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file a
 
 Then execute the following command:
 
-    ansible-playbook -i inventory/static-inventory.yml create-network-interfaces.yml -e "target=all"
+    ansible-playbook -i inventory/static-inventory.yml create-network-interfaces.yml
+
+__Note:__ This command will reboot all the servers!
 
 
 
