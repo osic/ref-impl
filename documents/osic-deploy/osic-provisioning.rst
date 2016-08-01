@@ -4,36 +4,36 @@
 Provisioning the deployment host
 ================================
 
-Learn how to manually provision your first deployment host and how to
-provision the rest of your servers using PXE.
+This section describes how to manually provision your first
+deployment host, and how to provision the rest of your servers
+using PXE. 
 
 Manually provisioning the deployment host
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Download a `modified Ubuntu Server 14.04.3 ISO
-   <http://23.253.105.87/ubuntu-14.04.3-server-i40e-hp-raid-x86_64.iso>`_.
-   The modified Ubuntu Server ISO contains i40e driver version 1.3.47
-   and HP iLO tools.
+#. Download a `modified Ubuntu Server 14.04.3
+   ISO <http://23.253.105.87/ubuntu-14.04.3-server-i40e-hp-raid-x86_64.iso>`_.
+   The modified Ubuntu Server ISO contains i40e driver version 1.3.47 and
+   HP iLO tools.
 
 #. Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM,
    iDRAC, or iLO.
-   To get an access to a server console through ILO, find the host ILO IP
+   To get an access to a server console through iLO, find the host iLO ip
    address through a web browser:
-
-   #. Log in with the credentials provided.
+   
+   #. Login with the credentials provided
    #. Request a remote console from the GUI.
-   #. To deploy the server, select the ``Virtual Drives`` tab from the
-      ILO console, press ``Image File CD/DVD-ROM``, then select the
-      Ubuntu image you downloaded to your local directory.
-   #. Click the ``Power Switch`` tab and select ``Reset`` to reboot
-      the host from the image.
+   #. To deploy the server, select the ``Virtual Drives`` tab from the iLO
+      console, press ``Image File CD/DVD-ROM``, and select the Ubuntu
+      image you downloaded to your local directory.
+   #. Press on the ``Power Switch`` tab and select ``Reset`` to reboot the
+      host from the image.
 
-#. Deselect or remove the Ubuntu ISO from the ILO console by
-   deselecting the ``Image File CD/DVD-ROM`` from the ``Virtual
-   Drives`` tab.
+#. Ensure you have unselected or removed the Ubuntu ISO from the iLO console by
+   unselecting the ``Image File CD/DVD-ROM`` from the ``Virtual Drives`` tab.
 
-The deployment host is now booted to the ISO. Perform the following
-steps to begin installation:
+The deployment host is now booted to the ISO, run through the following steps to
+begin installation:
 
 #. Select ``Language``.
 
@@ -48,68 +48,71 @@ steps to begin installation:
 
 #. Press ``Enter`` to begin the installation process.
 
-#. You are prompted for the following menus:
+#. You will be prompted for the following menus:
 
    *  Select a language
    *  Select your location
    *  Configure the keyboard
    *  Configure the network
 
-#. DHCP detection fails. Manually select the proper network interface,
-   typically ``p1p1``, and manually configure networking on the
-   ``PXE`` network.
+#. DHCP detection fails. You will need to manually select the proper
+   network interface, typically ``p1p1``, and manually configure
+   networking on the ``PXE`` network.
 
    .. note::
 
-      Refer to your onboarding email to find the ``PXE`` network information.
+      Refer to your onboarding email to find the ``PXE`` network information.  
+  
+#. Insert the following configuration for name servers: ``8.8.8.8 8.8.4.4``.
 
-#. Insert the following configuration for name servers: ``8.8.8.8
-   8.8.4.4``.
-
-#. If an error appears asking if ``/dev/sda contains GPT signatures,
+#. If an error appears asking if ``/dev/sda contains GPT signatures``,
    select ``No`` and continue.
 
-After networking is configured, the ``Preseed`` file is downloaded.
-The remainder of the Ubuntu install is unattended. The Ubuntu install
-finishes when the system reboots and a login prompt appears.
+Once networking is configured, the ``Preseed`` file will be downloaded.
+The remainder of the Ubuntu install will be unattended.
 
-Updating the Linux kernel
+The Ubuntu install finishes when the system reboots and a login
+prompt appears.
+
+Updating the linux kernel
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After the system boots, connect using SSH to the IP address you
-manually assigned. Log in with user name ``root`` and password
-``cobbler``.
+Once the system boots, you can SSH using the IP address you
+manually assigned. 
 
-Update the Linux kernel on the deployment host to update the upstream
-i40e driver.
+#. Login with username ``root`` and password ``cobbler``.
 
-.. code::
+#. Update the Linux kernel on the deployment host to update the upstream
+   i40e driver.
 
-   # apt-get update; apt-get install -y linux-generic-lts-xenial
+   .. code::
 
-Reboot the server after the update finishes running.
+      $ apt-get update; apt-get install -y linux-generic-lts-xenial
 
-After provisioning the deployment host, connect to it using SSH.
+#. Reboot the server when the update finishes running.
 
-Download a pre-packaged LXC container, which contains everything
-needed to PXE boot the rest of the servers.
+#. After provisioning the deployment host, SSH into it.
+
+#. Download a pre-packaged LXC container, it contains everything you
+   need to PXE boot the rest of the servers.
+
 
 Provisioning the servers with PXE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. To set up the LXC container, create ``br-pxe``.
+#. In order to setup the LXC container, create ``br-pxe``.
 
-#. Install the required packages:
+#. Install the necessary packages:
 
    .. code::
 
-      # apt-get install vlan bridge-utils
+      $ apt-get install vlan bridge-utils
 
-#. Edit the network interface file ``/etc/network/interfaces`` to
+#. Reconfigure the network interface file ``/etc/network/interfaces`` to
    match the following:
-
+   
    .. note::
-
+      
       Your individual IP addresses and ports will differ from the ones
       below.
 
@@ -134,13 +137,9 @@ Provisioning the servers with PXE
       bridge_waitport 0
       bridge_fd 0
 
-#. Bring up the ``br-pxe`` interface.
+#. Bring up ``br-pxe``. We recommend you have access to the iLO in case the
+   following commands fail and you lose network connectivity:
 
    .. code::
 
-      # ifdown p1p1; ifup br-pxe
-
-   .. note::
-
-      We recommend that you have access to the iLO if these commands
-      fail and you lose network connectivity.
+      # ifdown p1p1; ifup br-pxe 

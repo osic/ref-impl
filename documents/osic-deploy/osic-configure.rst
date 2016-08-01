@@ -2,29 +2,30 @@
 Configuring the LXC container
 =============================
 
-Make the following configuration changes to the pre-packaged LXC
-container.
+Ensure the following configuration changes are made to the
+pre-packaged LXC container.
 
 #. Attach the LXC container:
 
    .. code::
 
-      # lxc-attach --name osic-prep
+      $ lxc-attach --name osic-prep
 
-#. If you changed the IP address in a previous step, reconfigure the
-   DHCP server by running the following sed commands. Change
-   ``172.22.0.22`` to match the IP address you set:
+#. If you had to change the IP address above, reconfigure the DHCP server
+   by running the following sed commands. You will need to change
+   ``172.22.0.22`` to match the IP address you set above:
 
    .. code::
 
-      # sed -i '/^next_server: / s/ .*/ 172.22.0.22/' /etc/cobbler/settings
-      # sed -i '/^server: / s/ .*/ 172.22.0.22/' /etc/cobbler/settings
+      sed -i '/^next_server: / s/ .*/ 172.22.0.22/' /etc/cobbler/settings
 
-#. Edit ``/etc/cobbler/dhcp.template`` and reconfigure your DHCP settings.
+      sed -i '/^server: / s/ .*/ 172.22.0.22/' /etc/cobbler/settings
 
-#. Change the ``subnet``, ``netmask``, ``option routers``, ``option
-   subnet-mask``, and ``range dynamic-bootp`` parameters to match your
-   network. For example:
+#. Open ``/etc/cobbler/dhcp.template`` and reconfigure your DHCP settings.
+
+#. Change the ``subnet``, ``netmask``, ``option routers``,
+   ``option subnet-mask``, and ``range dynamic-bootp`` parameters to match
+   your network.
 
    .. code::
 
@@ -41,33 +42,35 @@ container.
 
    .. code::
 
-      # service cobbler restart
-      # cobbler sync
+      $ service cobbler restart
 
-You can now PXE boot any servers, but it is still a manual process. In
-order for it to be an automated process, a CSV file must be created.
+      $ cobbler sync
+
+You can now PXE boot any servers, but it is still a manual
+process. In order for it to be an automated process, a CSV file needs to
+be created.
 
 PXE boot the servers
 ~~~~~~~~~~~~~~~~~~~~
 
-The following steps show you how to gather MAC addresses.
+The following steps detail how to gather MAC addresses.
 
-#. Change to /root directory:
+#. Go to root home directory:
 
    .. code::
 
-      # cd /root
+      $ cd /root
 
-#. Obtain the MAC address of the network interface configured to PXE
-   boot on every server. For example, ``p1p1``.
+#. Obtain the MAC address of the network interface configured to PXE boot on
+   every server. For example, ``p1p1``.
 
-#. Map the MAC addresses to their respective hostnames by logging into the
+#. Map the MAC addresses to their respective hostname by logging into the
    LXC container and creating a CSV file named ``ilo.csv``. Use the information
    from your onboarding email to create the CSV.
 
    For example:
 
-   .. code::
+   .. code:: 
 
       729427-controller01,10.15.243.158,controller
       729426-controller02,10.15.243.157,controller
@@ -90,12 +93,13 @@ The following steps show you how to gather MAC addresses.
       729409-swift02,10.15.243.140,swift
       729408-swift03,10.15.243.139,swift
 
-   Remove any spaces in your CSV file. We recommend removing the
-   deployment host you manually provisioned from this CSV so you do
-   not accidentally reboot the host you are working from.
+   Ensure to remove any spaces in your CSV file. We recommend
+   removing the deployment host you manually provisioned from this CSV so
+   you do not accidentally reboot the host you are working from.
 
-After this information is collected, it is used to create another CSV
-file used as input for many different steps in the build process.
+Once this information is collected, it will be used to create another
+CSV file that will be the input for many different steps in the build
+process.
 
 Create input CSV
 ~~~~~~~~~~~~~~~~
@@ -103,16 +107,13 @@ Create input CSV
 Use the following script to create a CSV named ``input.csv`` in the
 following format.
 
-.. This is not a script. Do you mean create an input.csv file in the
-   following format?
+.. code::
 
- .. code::
+   hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
 
-    hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
-
-If you are installing OpenStack-Ansible, order the rows in the CSV
-file in the following order:
-
+If you are installing OpenStack-Ansible, we recommended ordering the rows
+in the CSV file in the following order:
+   
  * Controller nodes
  * Logging nodes
  * Compute nodes
@@ -121,33 +122,32 @@ file in the following order:
 
 An example for OpenStack-Ansible installations:
 
- .. code::
+.. code::
+   
+   744800-infra01.example.com,A0:36:9F:7F:70:C0,172.22.0.23,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+   744819-infra02.example.com,A0:36:9F:7F:6A:C8,172.22.0.24,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+   744820-infra03.example.com,A0:36:9F:82:8C:E8,172.22.0.25,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+   744821-logging01.example.com,A0:36:9F:82:8C:E9,172.22.0.26,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+   744822-compute01.example.com,A0:36:9F:82:8C:EA,172.22.0.27,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+   744823-compute02.example.com,A0:36:9F:82:8C:EB,172.22.0.28,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+   744824-cinder01.example.com,A0:36:9F:82:8C:EC,172.22.0.29,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-cinder
+   744825-object01.example.com,A0:36:9F:7F:70:C1,172.22.0.30,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+   744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+   744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
 
-    744800-infra01.example.com,A0:36:9F:7F:70:C0,172.22.0.23,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744819-infra02.example.com,A0:36:9F:7F:6A:C8,172.22.0.24,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744820-infra03.example.com,A0:36:9F:82:8C:E8,172.22.0.25,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744821-logging01.example.com,A0:36:9F:82:8C:E9,172.22.0.26,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744822-compute01.example.com,A0:36:9F:82:8C:EA,172.22.0.27,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744823-compute02.example.com,A0:36:9F:82:8C:EB,172.22.0.28,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744824-cinder01.example.com,A0:36:9F:82:8C:EC,172.22.0.29,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-cinder
-    744825-object01.example.com,A0:36:9F:7F:70:C1,172.22.0.30,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
-    744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
-    744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+The following command loops through each iLO IP address in ``ilo.csv``.
+It obtains the MAC address of the network interface configured to PXE boot
+and setup the rest of information as well as shown above:
 
-The following script loops through each iLO IP address in ``ilo.csv``.
-It obtains the MAC address of the network interface configured to PXE
-boot and sets the rest of information as shown above:
+.. note::
+   
+   Ensure to set ``COUNT`` to the first usable address after
+   deployment host and container and make sure to change
+   ``host-ip,host-netmask,host-gateway`` in the script
+   (``172.22.0.$COUNT,255.255.252.0,172.22.0.1``) to match your PXE network
+   configurations.
 
- .. note::
-
-    Set ``COUNT`` to the first usable address after the deployment host
-    and container and make sure to change
-    ``host-ip,host-netmask,host-gateway``
-    (``172.22.0.$COUNT,255.255.252.0,172.22.0.1``) to match your PXE
-    network configurations.
-
-
- .. code::
+.. code::
 
     COUNT=23
     for i in $(cat ilo.csv)
@@ -174,12 +174,12 @@ boot and sets the rest of information as shown above:
         (( COUNT++ ))
     done
 
- .. note::
+.. note::
 
-    Before you continue, make sure the generated script ``input.csv``
-    has all the information as shown in the previous example. If you
-    find missing information, try pasting the command in a bash script
-    and execute it.
+   Before you continue, make sure the generated script ``input.csv`` has
+   all the information as shown in the example above. If you run into missing
+   information, you may need to paste the above command in a bash script and
+   execute it.
 
 Assigning a cobbler profile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -194,56 +194,58 @@ the cobbler system to. You have the following options:
 * ubuntu-14.04.3-server-unattended-osic-swift
 * ubuntu-14.04.3-server-unattended-osic-swift-ssd
 
-Typically, use the ``ubuntu-14.04.3-server-unattended-osic-generic``
-cobbler profile. It creates one RAID10 raid group. The operating
-system sees this as ``/dev/sda``.
+Typically, you will use the
+``ubuntu-14.04.3-server-unattended-osic-generic`` cobbler profile. It
+creatse one RAID10 raid group. The operating system will see this as
+``/dev/sda``.
 
 The ``ubuntu-14.04.3-server-unattended-osic-cinder`` cobbler profile
-creates one RAID1 raid group and a second RAID10 raid group. These are
-seen by the operating system as ``/dev/sda`` and ``/dev/sdb``,
+creates one RAID1 raid group and a second RAID10 raid group. These
+will be seen by the operating system as ``/dev/sda`` and ``/dev/sdb``,
 respectively.
 
 The ``ubuntu-14.04.3-server-unattended-osic-swift`` cobbler profile
 creates one RAID1 raid group and 10 RAID0 raid groups each containing one
 disk. The HP Storage Controller does not present a disk to the operating
-system unless it is in a RAID group. Because Swift needs to deal with
+system unless it is in a RAID group. Because swift needs to deal with
 individual, non-RAIDed disks, the only way to do this is to put each
-disk into its own RAID0 raid group.
+disk in its own RAID0 raid group.
 
-You only use the ``ssd`` cobbler profiles if the servers contain SSD
-drives.
+You will only use the ``ssd`` cobbler profiles if the servers contain
+SSD drives.
 
 Generate cobbler systems
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 #. Run the ``generate_cobbler_systems.py`` script to generate a
-   cobbler system command for each server. Pipe the output to Bash to
-   add the cobbler system to cobbler:
+   cobbler system command for each server and pipe
+   the output to bash to add the cobbler system to cobbler:
 
    .. code::
 
-      # cd /root/rpc-prep-scripts
-      # python generate_cobbler_system.py /root/input.csv | bash
+      $ cd /root/rpc-prep-scripts
 
-#. Verify the cobbler system entries are added by running ``cobbler
-   system list``.
+        python generate_cobbler_system.py /root/input.csv | bash
+
+#. Verify the cobbler system entries were added by running
+   ``cobbler system list``.
 
 #. Run ``cobbler sync``.
 
 Begin PXE booting
 ~~~~~~~~~~~~~~~~~
 
-Perform the following steps to begin PXE booting.
+Run the following steps to begin PXE booting.
 
-#. Reboot all servers with the following command:
-
+#. Reboot all of the servers with the following command:
+   
    .. note::
-
+   
       If the deployment host is the first controller, remove it from
-      ``ilo.csv`` so that you do not reboot the host running the LXC
+      ``ilo.csv`` to ensure you do not reboot the host running the LXC
       container.
 
-   .. code::
+   .. code:: 
 
       for i in $(cat /root/ilo.csv)
       do
@@ -254,15 +256,15 @@ Perform the following steps to begin PXE booting.
       done
 
    .. note::
+    
+      If the servers are already shut down, change ``power reset`` 
+      with ``power on`` in the above command.
 
-      If the servers are already stopped, change ``power reset`` to
-      ``power on``.
+#. As the servers finish PXE booting, a call will be made to the cobbler
+   API to ensure the server does not PXE boot again.
 
-#. When servers finish PXE booting, a call is made to the cobbler API
-   to ensure that the server does not PXE boot again.
-
-#. To see which servers are pending PXE boot, run the following
-   command:
+#. To see which servers are still set to PXE boot, run the
+   following command:
 
    .. code::
 
@@ -274,40 +276,40 @@ Perform the following steps to begin PXE booting.
       fi
       done
 
-   If a server returns ``True``, it has not yet PXE booted.
+   If your server returns ``True``, it has not yet PXE booted.
 
    .. note::
-
-      To re-pxeboot servers, clean old settings from cobbler with the
-      following command:
-
+     
+      In case you want to re-pxeboot servers, make sure to clean old
+      settings from cobbler with the following command:
+      
       .. code::
 
-         # for i in `cobbler system list`; do cobbler system \
-           remove --name $i; done
+         for i in `cobbler system list`; do cobbler system remove --name $i; done;
 
 
 Bootstrapping the servers
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-After all servers finish PXE booting, bootstrap them as follows.
+When all servers finish PXE booting, you will now need to bootstrap the
+servers.
 
-#. Run the ``generate_ansible_hosts.py`` Python script:
+#. Run the ``generate_ansible_hosts.py`` python script:
 
    .. code::
+   
+      $ cd /root/rpc-prep-scripts
 
-      # cd /root/rpc-prep-scripts
-      # python generate_ansible_hosts.py /root/input.csv > \
-        /root/osic-prep-ansible/hosts
+        python generate_ansible_hosts.py /root/input.csv > /root/osic-prep-ansible/hosts
 
-   If this is not an OpenStack Ansible installation, skip to the next
-   section.
+    If this is not an OpenStack-Ansible installation, see
+    the following section.
 
    If this is an OpenStack-Ansible installation, organize the Ansible
-   hosts file into groups for controller, logging, compute, cinder,
-   and swift.
+   hosts file into groups for controller, logging, compute,
+   cinder, and swift.
 
-   An example for OpenStack-Ansible installations:
+   An example for OpenStack-Ansible installation:
 
    .. code::
 
@@ -331,94 +333,97 @@ After all servers finish PXE booting, bootstrap them as follows.
      744826-object02.example.com ansible_ssh_host=10.240.0.59
      744827-object03.example.com ansible_ssh_host=10.240.0.60
 
-#. The LXC container does not have all of the SSH fingerprints for the
-new server in its ``known_hosts`` file. Run the following command to
-add them:
+The LXC container does not have all of the new server's SSH fingerprints
+in its ``known_hosts`` file. You have to programatically add them.
+
+#. Run the following command to add them:
+
+   .. code:: 
+
+      for i in $(cat /root/osic-prep-ansible/hosts | awk /ansible_ssh_host/ | cut -d'=' -f2)
+      do
+      ssh-keygen -R $i
+      ssh-keyscan -H $i >> /root/.ssh/known_hosts
+      done
+
+#. Verify Ansible can talk to every server (the password is ``cobbler``):
 
    .. code::
 
-      # for i in $(cat /root/osic-prep-ansible/hosts | awk /ansible_ssh_host/ | cut -d'=' -f2)
-        do
-        ssh-keygen -R $i
-        ssh-keyscan -H $i >> /root/.ssh/known_hosts
-        done
+      $ cd /root/osic-prep-ansible
 
-#. Verify that Ansible can talk to every server (the password is
-   ``cobbler``):
-
-   .. code::
-
-      # cd /root/osic-prep-ansible
-      # ansible -i hosts all -m shell -a "uptime" --ask-pass
+        ansible -i hosts all -m shell -a "uptime" --ask-pass
 
 #. Generate an SSH key pair for the LXC container:
 
    .. code::
 
-      # ssh-keygen
+      $ ssh-keygen
 
-#. Copy the SSH public key for the LXC container to the
-   ``osic-prep-ansible`` directory:
+#. Copy the LXC container's SSH public key to the ``osic-prep-ansible``
+   directory:
+
+   .. code::
+  
+      $ cp /root/.ssh/id_rsa.pub /root/osic-prep-ansible/playbooks/files/public_keys/osic-prep
+
+
+#. Finally, run the ``bootstrap.yml`` Ansible Playbook:
 
    .. code::
 
-      # cp /root/.ssh/id_rsa.pub \
-        /root/osic-prep-ansible/playbooks/files/public_keys/osic-prep
+      $ cd /root/osic-prep-ansible
 
-
-#. Finally, run the ``bootstrap.yml`` Ansible playbook:
-
-   .. code::
-
-      # cd /root/osic-prep-ansible
-      # ansible-playbook -i hosts playbooks/bootstrap.yml --ask-pass
-
+        ansible-playbook -i hosts playbooks/bootstrap.yml --ask-pass
 
 Clean up LVM logical volumes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-For an OpenStack-Ansible installation, clean up LVM logical volumes.
+If this will be an OpenStack-Ansible installation, you will need to
+clean up particular LVM Logical Volumes.
 
-Each server is provisioned with a standard set of LVM logical volumes.
-Not all servers require all of the LVM logical volumes. Clean them up
-with the following steps:
+Each server is provisioned with a standard set of LVM Logical Volumes.
+Not all servers need all of the LVM Logical Volumes. Clean them up with
+the following steps.
 
-#. Remove the logical volume ``nova00`` from the controller, logging,
+#. Remove LVM Logical Volume ``nova00`` from the controller, logging,
    cinder, and swift nodes:
 
    .. code::
 
-      # ansible-playbook -i hosts playbooks/remove-lvs-nova00.yml
+      $ ansible-playbook -i hosts playbooks/remove-lvs-nova00.yml
 
-#. Remove the logical volume ``deleteme00`` from all nodes:
+#. Remove LVM Logical Volume ``deleteme00`` from all nodes:
 
    .. code::
 
-      # ansible-playbook -i hosts playbooks/remove-lvs-deleteme00.yml
+      $ ansible-playbook -i hosts playbooks/remove-lvs-deleteme00.yml
 
 Update Linux kernel
 ~~~~~~~~~~~~~~~~~~~
 
-Every server in the OSIC RAX Cluster contains two Intel X710 10 GbE
-NICs. These NICs have not been well tested in Ubuntu. As a result, the
-upstream i40e driver in the default 14.04.3 Linux kernel shows issues
-when you set up VLAN-tagged interfaces and bridges.
+Every server in the OSIC Rackspace cluster is running two Intel X710 10 GbE
+NICs. These NICs have not been well tested in Ubuntu. As a result the
+upstream i40e driver in the default 14.04.3 Linux kernel will begin
+showing issues when you setup VLAN tagged interfaces and bridges.
 
-To work around this, install an updated Linux kernel as follows:
+In order to get around this, install an updated Linux kernel.
 
-   .. code::
+Run the following commands:
 
-      # cd /root/osic-prep-ansible
-      # ansible -i hosts all -m shell -a "apt-get update; apt-get \
-        install -y linux-generic-lts-xenial" --forks 25
+.. code::
+
+   $ cd /root/osic-prep-ansible
+
+    ansible -i hosts all -m shell -a "apt-get update; apt-get install -y linux-generic-lts-xenial" --forks 25
 
 Reboot nodes
 ~~~~~~~~~~~~
 
 Finally, reboot all servers:
 
- .. code::
+.. code::
 
-    # ansible -i hosts all -m shell -a "reboot" --forks 25
+   ansible -i hosts all -m shell -a "reboot" --forks 25
 
-After all servers reboot, install OpenStack-Ansible.
+Once all servers reboot, begin installing OpenStack-Ansible.
