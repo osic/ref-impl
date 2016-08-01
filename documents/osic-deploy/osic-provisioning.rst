@@ -17,13 +17,13 @@ Manually provisioning the deployment host
 
 #. Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM,
    iDRAC, or iLO.
-   To get an access to a server console through ILO, find the host ILO IP
+   To get an access to a server console through ILO, find the host iLO IP
    address through a web browser:
 
    #. Log in with the credentials provided.
    #. Request a remote console from the GUI.
    #. To deploy the server, select the ``Virtual Drives`` tab from the
-      ILO console, press ``Image File CD/DVD-ROM``, then select the
+      iLO console, press ``Image File CD/DVD-ROM``, then select the
       Ubuntu image you downloaded to your local directory.
    #. Click the ``Power Switch`` tab and select ``Reset`` to reboot
       the host from the image.
@@ -66,7 +66,7 @@ steps to begin installation:
 #. Insert the following configuration for name servers: ``8.8.8.8
    8.8.4.4``.
 
-#. If an error appears asking if ``/dev/sda contains GPT signatures,
+#. If an error appears asking if ``/dev/sda contains GPT signatures``,
    select ``No`` and continue.
 
 After networking is configured, the ``Preseed`` file is downloaded.
@@ -77,22 +77,23 @@ Updating the Linux kernel
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 After the system boots, connect using SSH to the IP address you
-manually assigned. Log in with user name ``root`` and password
-``cobbler``.
+manually assigned.
 
-Update the Linux kernel on the deployment host to update the upstream
-i40e driver.
+#. Log in with user name ``root`` and password ``cobbler``.
 
-.. code::
+#. Update the Linux kernel on the deployment host to update the upstream
+   i40e driver.
 
-   # apt-get update; apt-get install -y linux-generic-lts-xenial
+   .. code::
 
-Reboot the server after the update finishes running.
+      # apt-get update; apt-get install -y linux-generic-lts-xenial
 
-After provisioning the deployment host, connect to it using SSH.
+#. Reboot the server after the update finishes running.
 
-Download a pre-packaged LXC container, which contains everything
-needed to PXE boot the rest of the servers.
+#. After provisioning the deployment host, connect to it using SSH.
+
+#. Download a pre-packaged LXC container, which contains everything
+   needed to PXE boot the rest of the servers.
 
 Provisioning the servers with PXE
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -134,7 +135,7 @@ Provisioning the servers with PXE
       bridge_waitport 0
       bridge_fd 0
 
-#. Bring up the ``br-pxe`` interface.
+#. Bring up the ``br-pxe`` interface:
 
    .. code::
 

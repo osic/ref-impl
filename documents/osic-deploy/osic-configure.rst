@@ -52,7 +52,7 @@ PXE boot the servers
 
 The following steps show you how to gather MAC addresses.
 
-#. Change to /root directory:
+#. Change to ``/root`` directory:
 
    .. code::
 
@@ -206,7 +206,7 @@ respectively.
 The ``ubuntu-14.04.3-server-unattended-osic-swift`` cobbler profile
 creates one RAID1 raid group and 10 RAID0 raid groups each containing one
 disk. The HP Storage Controller does not present a disk to the operating
-system unless it is in a RAID group. Because Swift needs to deal with
+system unless it is in a RAID group. Because swift needs to deal with
 individual, non-RAIDed disks, the only way to do this is to put each
 disk into its own RAID0 raid group.
 
@@ -300,7 +300,7 @@ After all servers finish PXE booting, bootstrap them as follows.
       # python generate_ansible_hosts.py /root/input.csv > \
         /root/osic-prep-ansible/hosts
 
-   If this is not an OpenStack Ansible installation, skip to the next
+   If this is not an OpenStack-Ansible installation, skip to the next
    section.
 
    If this is an OpenStack-Ansible installation, organize the Ansible
@@ -399,7 +399,7 @@ with the following steps:
 Update Linux kernel
 ~~~~~~~~~~~~~~~~~~~
 
-Every server in the OSIC RAX Cluster contains two Intel X710 10 GbE
+Every server in the OSIC Rackspace cluster contains two Intel X710 10 GbE
 NICs. These NICs have not been well tested in Ubuntu. As a result, the
 upstream i40e driver in the default 14.04.3 Linux kernel shows issues
 when you set up VLAN-tagged interfaces and bridges.
