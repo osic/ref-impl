@@ -18,18 +18,18 @@ Manually provisioning the deployment host
 
 #. Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM,
    iDRAC, or iLO.
-   To get an access to a server console through ILO, find the host ILO ip
+   To get an access to a server console through iLO, find the host iLO ip
    address through a web browser:
    
    #. Login with the credentials provided
    #. Request a remote console from the GUI.
-   #. To deploy the server, select the ``Virtual Drives`` tab from the ILO
+   #. To deploy the server, select the ``Virtual Drives`` tab from the iLO
       console, press ``Image File CD/DVD-ROM``, and select the Ubuntu
       image you downloaded to your local directory.
    #. Press on the ``Power Switch`` tab and select ``Reset`` to reboot the
       host from the image.
 
-#. Ensure you have unselected or removed the Ubuntu ISO from the ILO console by
+#. Ensure you have unselected or removed the Ubuntu ISO from the iLO console by
    unselecting the ``Image File CD/DVD-ROM`` from the ``Virtual Drives`` tab.
 
 The deployment host is now booted to the ISO, run through the following steps to
@@ -65,7 +65,7 @@ begin installation:
   
 #. Insert the following configuration for name servers: ``8.8.8.8 8.8.4.4``.
 
-#. If an error appears asking if ``/dev/sda contains GPT signatures,
+#. If an error appears asking if ``/dev/sda contains GPT signatures``,
    select ``No`` and continue.
 
 Once networking is configured, the ``Preseed`` file will be downloaded.
@@ -78,22 +78,23 @@ Updating the linux kernel
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Once the system boots, you can SSH using the IP address you
-manually assigned. Login with username ``root`` and password
-``cobbler``.
+manually assigned. 
 
-Update the Linux kernel on the deployment host to update the upstream
-i40e driver.
+#. Login with username ``root`` and password ``cobbler``.
 
-.. code::
+#. Update the Linux kernel on the deployment host to update the upstream
+   i40e driver.
 
-   $ apt-get update; apt-get install -y linux-generic-lts-xenial
+   .. code::
 
-Reboot the server when the update finishes running.
+      $ apt-get update; apt-get install -y linux-generic-lts-xenial
 
-After provisioning the deployment host, SSH into it.
+#. Reboot the server when the update finishes running.
 
-Download a pre-packaged LXC container, it contains everything you
-need to PXE boot the rest of the servers.
+#. After provisioning the deployment host, SSH into it.
+
+#. Download a pre-packaged LXC container, it contains everything you
+   need to PXE boot the rest of the servers.
 
 
 Provisioning the servers with PXE

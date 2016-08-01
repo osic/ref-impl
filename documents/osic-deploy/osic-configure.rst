@@ -207,7 +207,7 @@ respectively.
 The ``ubuntu-14.04.3-server-unattended-osic-swift`` cobbler profile
 creates one RAID1 raid group and 10 RAID0 raid groups each containing one
 disk. The HP Storage Controller does not present a disk to the operating
-system unless it is in a RAID group. Because Swift needs to deal with
+system unless it is in a RAID group. Because swift needs to deal with
 individual, non-RAIDed disks, the only way to do this is to put each
 disk in its own RAID0 raid group.
 
@@ -302,14 +302,14 @@ servers.
 
         python generate_ansible_hosts.py /root/input.csv > /root/osic-prep-ansible/hosts
 
-    If this is not an OpenStack Ansible installation, see
+    If this is not an OpenStack-Ansible installation, see
     the following section.
 
    If this is an OpenStack-Ansible installation, organize the Ansible
    hosts file into groups for controller, logging, compute,
-   cinder, and swift
+   cinder, and swift.
 
-   An example for openstack-ansible installation:
+   An example for OpenStack-Ansible installation:
 
    .. code::
 
@@ -368,13 +368,13 @@ in its ``known_hosts`` file. You have to programatically add them.
       $ cp /root/.ssh/id_rsa.pub /root/osic-prep-ansible/playbooks/files/public_keys/osic-prep
 
 
-Finally, run the ``bootstrap.yml`` Ansible Playbook:
+#. Finally, run the ``bootstrap.yml`` Ansible Playbook:
 
-.. code::
+   .. code::
 
-    cd /root/osic-prep-ansible
+      $ cd /root/osic-prep-ansible
 
-    ansible-playbook -i hosts playbooks/bootstrap.yml --ask-pass
+        ansible-playbook -i hosts playbooks/bootstrap.yml --ask-pass
 
 Clean up LVM logical volumes
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -402,7 +402,7 @@ the following steps.
 Update Linux kernel
 ~~~~~~~~~~~~~~~~~~~
 
-Every server in the OSIC RAX Cluster is running two Intel X710 10 GbE
+Every server in the OSIC Rackspace cluster is running two Intel X710 10 GbE
 NICs. These NICs have not been well tested in Ubuntu. As a result the
 upstream i40e driver in the default 14.04.3 Linux kernel will begin
 showing issues when you setup VLAN tagged interfaces and bridges.
