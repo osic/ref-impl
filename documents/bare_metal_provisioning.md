@@ -8,12 +8,11 @@ Table of Contents
 * [Download and Setup the osic-prep LXC Container](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#download-and-setup-the-osic-prep-lxc-container)
 * [PXE Boot the Servers](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#pxe-boot-the-servers)
 * [Bootstrapping the Servers](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#bootstrapping-the-servers)
-* [Create the osic-prep LXC Container](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#create-the-osic-prep-lxc-container)
 
 Provisioning the Deployment Host
 --------------------------------
 
-You have been allocated a certain number of bare metal servers. There is currently nothing running on these servers. You will need to manually provision the first host. This will become your deployment host that will be used to provision the rest of the servers using PXE.
+You have been allocated a certain number of bare metal servers. There is currently nothing running on these servers. To deploy all these servers, you will need to manually provision the first host from the allocated servers. This will become your deployment host that will use later to provision the rest of the servers using PXE.
 
 ### Manually Provision the Deployment Host
 
@@ -191,7 +190,7 @@ Go to root home directory
 
 You will need to obtain the MAC address of the network interface (e.g. p1p1) configured to PXE boot on every server. Be sure the MAC addresses are mapped to their respective hostname.
 
-You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. Use the information from your onboarding email to create the CSV.
+You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that ou wish to assing for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Use the information from your onboarding email to create the CSV.
 
 For example:
 
@@ -277,7 +276,7 @@ do
 done
 ```
 
-__NOTE:__ before you continue, make sure the generated script __input.csv__ has all the information as shown in the example above. In case you run into some missing information, you may need to paste the above command in a bash script and execute it.
+__NOTE:__ before you continue, make sure the generated script __input.csv__ has all the information as shown previously. In case you run into some missing information, you may need to paste the above command in a bash script and execute it.
 
  
 ### Assigning a Cobbler Profile

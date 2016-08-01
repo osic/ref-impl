@@ -101,7 +101,7 @@ Install software packages and load necessary dynamic kernel modules for networki
 
 First, Determine storage devices on nodes that will be used for object storage. To do that, login to one of the swift nodes, list all disks by executing __sudo fdisk -l__. Available disks will be in the form of __/dev/sd\<x>__ except __dev/sda__ since it hosts the Operating System.
 
-Then, add correct disks names under disks list in vars/swift-disks.yml
+If you still on the swift node, log out and return to your deployment node under __/opt/osic-ref-impl/playbooks__ directory and add the correct disks names under disks list in __./vars/swift-disks.yml__
 
     disks:
       - sdb
@@ -127,7 +127,6 @@ Then execute the following command:
 
     ansible-playbook -i inventory/static-inventory.yml create-network-interfaces.yml -e "target=all"
 
-This command will reboot servers once it finishes configurations!
 
 
 Configuring OpenStack environment
@@ -160,7 +159,6 @@ move to openstack-ansible repository:
 
 Setup target hosts for infrastructure and OpenStack services by running the setup-hosts.yml foundation playbooks
 
-    cd /opt/openstack-ansible/playbooks
     openstack-ansible setup-hosts.yml
 
 Run the Infratructure playbook to install the infrastructure services (Memcached, the repository server, Galera, Rabbitmq...)
