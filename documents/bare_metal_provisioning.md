@@ -20,7 +20,12 @@ First, download a [modified Ubuntu Server 14.04.3 ISO](http://23.253.105.87/ubun
 
 Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
-__NOTE:__ to get an access to a server console through ILO, simply look for the host ILO ip address through a web browser, login with the credentials provided and then you can request a remote console from the GUI. After, to deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__, select the Ubuntu image you downloaded to your local directory and finally press on the __Power Switch__ tab and select __Reset__ to reboot the host from the image.
+__NOTE:__ to deploy a host through ILO:
+1.  Find the host ILO ip address through a web browser
+2. Login with the ILO credentials
+3. Request a remote console from the GUI (.NET console for windows and Java for other OSes).
+4. To deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__ then select the Ubuntu image you downloaded to your local directory. Depending on your browser and OS, If you are using the Java console, you may need to allow your java plugin to run in unsafe mode, so that it can access the ubuntu image from your local directory.
+5. Click the __Power Switch__ tab and select __Reset__ to reboot the host from the image.
 
 __Before you move on, be sure you have unselected or removed the Ubuntu ISO from the ILO console (unselect Image File CD/DVD-ROM from the Virtual Drives tab)__ so that future server reboots do not continue to use it to boot.
 
@@ -312,13 +317,14 @@ Once all of the __cobbler systems__ are setup, run `cobbler sync`.
 
 ### Begin PXE Booting
 
-To begin PXE booting, reboot all of the servers with the following command (if the deployment host is the first controller, you will want to __remove__ it from the __ilo.csv__ file so you don't reboot the host running the LXC container):
+To begin PXE booting, Set the servers to boot from PXE on the next reboot and reboot all of the servers with the following command  (if the deployment host is the first controller, you will want to __remove__ it from the __ilo.csv__ file so you don't reboot the host running the LXC container):
 
     for i in $(cat /root/ilo.csv)
     do
     NAME=$(echo $i | cut -d',' -f1)
     IP=$(echo $i | cut -d',' -f2)
     echo $NAME
+    ipmitool -I lanplus -H $IP -U root -P calvincalvin bootdev pxe
     ipmitool -I lanplus -H $IP -U root -P calvincalvin power reset
     done
 
@@ -336,7 +342,7 @@ To quickly see which servers are still set to PXE boot, run the following comman
     fi
     done
 
-Any server which returns __True__ has not yet PXE booted.
+Any server which returns __True__ has not yet PXE booted. Rerun last command until there is no output to make sure all your servers has finished pxebooting. Time to wait depends on the number of servers you are deploying. If somehow, one or two servers did not go through for a long time, you may want to investigate them with their ILO console. In most cases, this is due to rebooting those servers either fails or hangs, so you may need to reboot them manually with ILO.
 
 __NOTE__: In case you want to re-pxeboot servers, make sure to clean old settings from cobbler with the following command:
 

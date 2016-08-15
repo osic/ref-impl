@@ -143,9 +143,14 @@ Change to /etc/openstack_deploy:
 
     cd /etc/openstack_deploy
 
-Check openstack_user_config.yml file and edit __cidr_networks__ to match your network configurations, __used_ips__ to exclude ip addresses from usage by OSA(ip addresses used by servers should be included here), and __internal_lb_vip_address__ and __external_lb_vip_address__ to ip addresses of one of the controller nodes belonging to Management and Flat Network respectively.
+1. Open openstack_user_config.yml file and edit:
+   * __cidr_networks__ to match your network configurations
+   * __used_ips__ to exclude ip addresses from usage by OSA(ip addresses used by servers should be included here)
+   * __internal_lb_vip_address__ and __external_lb_vip_address__ to ip addresses of one of the controller nodes belonging to Management and Flat Network respectively.
 
-Check files in __conf.d__ directory and edit ip addresses of different hosts under compute_hosts, log_hosts, storage_hosts, network_hosts... to match your environment layout. __infra hosts__ hosting infrastructure services are usually referencing controller hosts.
+2. Move to __conf.d__ directory and edit ip addresses of different hosts under compute_hosts, log_hosts, storage_hosts, network_hosts... to their ip addresses of the interface belonging to the management network.
+
+__NOTE:__ __infra hosts__ hosting infrastructure services are usually referencing controller hosts.
 
 Configure service credentials by filling the user_secrets.yml manually or through OSA provided script:
 
@@ -157,7 +162,7 @@ OpenStack Installation
 
 move to openstack-ansible repository:
 
-    cd /opt/openstack-ansible
+    cd /opt/openstack-ansible/playbooks
 
 Setup target hosts for infrastructure and OpenStack services by running the setup-hosts.yml foundation playbooks
 
