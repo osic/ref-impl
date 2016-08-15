@@ -9,10 +9,13 @@ Table of Contents
 * [PXE Boot the Servers](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#pxe-boot-the-servers)
 * [Bootstrapping the Servers](https://github.com/osic/ref-impl/blob/master/documents/bare_metal_provisioning.md#bootstrapping-the-servers)
 
+Overview
+---------
+
+You have have a number of bare metal servers and you want to build your own cloud on top of them. To achieve that goal, first step is to have your bare metal servers provisioned with an Operating system, most likely Linux if you will be using later an Open Source platform to build your cloud. On a production deployment, the process of deploying all these servers starts by manually provisioning  the first host from your servers. This host will become your deployment host and will be used later to provision the rest of the servers by booting them over Network. This mechanism is called PXE Booting where servers use their PXE-enabled Network Interface Cards to boot from them as any other boot device.
+
 Provisioning the Deployment Host
 --------------------------------
-
-You have been allocated a certain number of bare metal servers. There is currently nothing running on these servers. To deploy all these servers, you will need to manually provision the first host from the allocated servers. This will become your deployment host that will use later to provision the rest of the servers using PXE.
 
 ### Manually Provision the Deployment Host
 
@@ -75,7 +78,11 @@ Download and Setup the osic-prep LXC Container
 
 With the deployment host provisioning done, SSH to it.
 
-Next, you will download a pre-packaged LXC container that contains everything you need to PXE boot the rest of the servers.
+Next, you will download a pre-packaged LXC container that contains a tool you need to PXE boot the rest of the servers called Cobbler
+
+### Cobbler overview
+
+There is a numerous tools that implement the PXE mechanism. However, we decided here to use Cobbler since it is a powerful, easy to use and handy when it comes to quickly setting up network installation environments. Cobbler is a Linux based provisioning system which lets you among others configure Network installation for each server from its MAC address, manage DNS and serve DHCP requests…
 
 ### Setup LXC Linux Bridge
 
@@ -325,7 +332,7 @@ To begin PXE booting, Set the servers to boot from PXE on the next reboot and re
     NAME=$(echo $i | cut -d',' -f1)
     IP=$(echo $i | cut -d',' -f2)
     echo $NAME
-    ipmitool -I lanplus -H $IP -U root -P calvincalvin bootdev pxe
+    ipmitool -I lanplus -H $IP -U root -P calvincalvin chassis bootdev pxe
     ipmitool -I lanplus -H $IP -U root -P calvincalvin power reset
     done
 

@@ -120,8 +120,16 @@ This section will setup bonded interfaces and add bridges to target hosts to sep
 
 Deployment host should also have an interface on the same network allocated for container management. This interface will be used to connect and manage all target hosts and their hosted containers that will be created later by OSA.
 
+For its deployment OSA uses usually 3 networks to separate traffic between containers, hosts and VMs:
 
-First open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations.
+* Management Network which provides management of and communication among infrastructure and OpenStack services.
+* Tunnel (VXLAN) Network	which provides infrastructure for VXLAN tunnel networks.
+* Storage Network which provides segregated access to Block Storage devices between Compute and Block Storage hosts.
+* Flat Network (optional) if you want to use openstack networking flat (untagged network).
+
+For that OSA will need a bridge on each host belonging to these networks. To do that, executing the playbook below will create these bridges with ip addresses of each bridge constructed by taking the last byte from the PXE ip address of the host and append it to the bridge network. For example if your host has 172.22.0.21 for its PXE interface, and if you configure your management_network to be 172.22.100.0/22, this playbook will create br-mgmt with its ip address equal to 172.22.100.__21__
+
+Now, first open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations.
 
 Then execute the following command:
 
