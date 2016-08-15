@@ -144,13 +144,14 @@ Change to /etc/openstack_deploy:
     cd /etc/openstack_deploy
 
 1. Open openstack_user_config.yml file and edit:
-   * __cidr_networks__ to match your network configurations
-   * __used_ips__ to exclude ip addresses from usage by OSA(ip addresses used by servers should be included here)
+   * __cidr_networks__ to match your network configurations (these terms are usually mingled: Management and container networks, overlay and tunnel networks)
+   * __used_ips__ to exclude ip addresses from usage by OSA(ip addresses used by servers should be included here).
    * __internal_lb_vip_address__ and __external_lb_vip_address__ to ip addresses of one of the controller nodes belonging to Management and Flat Network respectively.
 
-2. Move to __conf.d__ directory and edit ip addresses of different hosts under compute_hosts, log_hosts, storage_hosts, network_hosts... to their ip addresses of the interface belonging to the management network.
+2. Move to __conf.d__ directory and edit:
+   * ip addresses of different hosts under compute_hosts, log_hosts, storage_hosts, network_hosts... to their ip addresses of the interface belonging to the management network (__infra hosts__ hosting infrastructure services are usually referencing controller hosts.)
+   * storage devices of your swift nodes you previously determined under __drives__ in __swift.yml__.
 
-__NOTE:__ __infra hosts__ hosting infrastructure services are usually referencing controller hosts.
 
 Configure service credentials by filling the user_secrets.yml manually or through OSA provided script:
 
