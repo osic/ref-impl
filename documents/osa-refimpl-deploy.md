@@ -114,7 +114,7 @@ Format disks for Swift to the XFS file sytem and mount them to /srv/node on each
     ansible-playbook -i inventory/static-inventory.yml swift-disks-prepare.yml
 
 
-#### configure Network for target hosts (deployment included)
+#### Configure Network for target hosts (deployment included)
 
 This section will setup bonded interfaces and add bridges to target hosts to separate different traffics in vlans.
 
@@ -174,11 +174,11 @@ Configure service credentials by filling the user_secrets.yml manually or throug
 
 __NOTE:__
 If you realized you did the wrong configurations for OSA in __/etc/openstack_deploy__ after running playbooks below. It is advised that you run the following:
-    - run __openstack-ansible lxc-containers-destroy.yml__ to destroy created containers from old run
-    - go back and correct your configurations
-    - run __rm /etc/openstack_deploy/openstack_inventory.json__ to remove old OSA inventory
-    - run __rm /etc/openstack_deploy/ansible_facts/*__ to remove facts from old run
-    - rerun playbook
+   * run __openstack-ansible lxc-containers-destroy.yml__ to destroy created containers from old run
+   * go back and correct your configurations
+   * run __rm /etc/openstack_deploy/openstack_inventory.json__ to remove old OSA inventory
+   * run __rm /etc/openstack_deploy/ansible_facts/*__ to remove facts from old run
+   * rerun playbooks
 
 
 OpenStack Installation
