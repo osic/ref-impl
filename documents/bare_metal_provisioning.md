@@ -82,7 +82,7 @@ Next, you will download a pre-packaged LXC container that contains a tool you ne
 
 ### Cobbler overview
 
-There is a numerous tools that implement the PXE mechanism. However, we decided here to use Cobbler since it is a powerful, easy to use and handy when it comes to quickly setting up network installation environments. Cobbler is a Linux based provisioning system which lets you among others configure Network installation for each server from its MAC address, manage DNS and serve DHCP requests…
+There is a numerous tools that implement the PXE mechanism. However, we decided here to use Cobbler since it is a powerful, easy to use and handy when it comes to quickly setting up network installation environments. Cobbler is a Linux based provisioning system which lets you, among other things, configure Network installation for each server from its MAC address, manage DNS and serve DHCP requests, etc.
 
 ### Setup LXC Linux Bridge
 
@@ -202,7 +202,7 @@ Go to root home directory
 
 You will need to obtain the MAC address of the network interface (e.g. p1p1) configured to PXE boot on every server. Be sure the MAC addresses are mapped to their respective hostname.
 
-You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that ou wish to assing for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Use the information from your onboarding email to create the CSV.
+You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that you wish to assing for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Please put hostnames that are meaningful to you like controller01, controller02, etc. Use the information from your onboarding email to create the CSV.
 
 For example:
 
@@ -258,7 +258,7 @@ An example for openstack-ansible installations:
     744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
     744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
 
-To do just that, the following command will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
+To do just that, the following script will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
 
 __NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1) and make sure to change __host-ip,host-netmask,host-gateway__ in the script (__172.22.0.$COUNT,255.255.252.0,172.22.0.1__) to match your PXE network configurations. In case you realized later that you have configured wrong ips here, you need to restart from this point.
 
@@ -327,12 +327,15 @@ Once all of the __cobbler systems__ are setup, run `cobbler sync`.
 
 To begin PXE booting, Set the servers to boot from PXE on the next reboot and reboot all of the servers with the following command  (if the deployment host is the first controller, you will want to __remove__ it from the __ilo.csv__ file so you don't reboot the host running the LXC container):
 
+__NOTE__: change root and calvincalvin below to your ILO username and password.
+
     for i in $(cat /root/ilo.csv)
     do
     NAME=$(echo $i | cut -d',' -f1)
     IP=$(echo $i | cut -d',' -f2)
     echo $NAME
     ipmitool -I lanplus -H $IP -U root -P calvincalvin chassis bootdev pxe
+    sleep 1
     ipmitool -I lanplus -H $IP -U root -P calvincalvin power reset
     done
 
@@ -396,7 +399,7 @@ An example for openstack-ansible installation:
 
 ### Verify Connectivity
 
-The LXC container will not have all of the new server's SSH fingerprints in its __known_hosts__ file. Programatically add them by running the following command:
+The LXC container will not have all of the new server's SSH fingerprints in its __known_hosts__ file. This is needed to bypass prompts and create a silent login when SSHing to servers. Programatically add them by running the following command:
 
     for i in $(cat /root/osic-prep-ansible/hosts | awk /ansible_ssh_host/ | cut -d'=' -f2)
     do
@@ -422,7 +425,7 @@ Copy the LXC container's SSH public key to the __osic-prep-ansible__ directory:
 
 ### Bootstrap the Servers
 
-Finally, run the bootstrap.yml Ansible Playbook:
+Finally, run the bootstrap.yml Ansible Playbook (the password is again __cobbler__):
 
     cd /root/osic-prep-ansible
 
@@ -448,7 +451,7 @@ Every server in the OSIC RAX Cluster is running two Intel X710 10 GbE NICs. Thes
 
 In order to get around this, you must install an updated Linux kernel.
 
-You can quickly do this by running the following commands:
+You can do this by running the following commands:
 
     cd /root/osic-prep-ansible
 

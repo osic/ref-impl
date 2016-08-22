@@ -19,7 +19,7 @@ This document summarizes the steps to deploy an openstack cloud from the opensta
 By end of this chapter, keeping current configurations you will have an OpenStack environment composed of:
 - One deployment host
 - Eight compute hosts
-- Three logging hostsm
+- Three logging hosts
 - Three infrastructure hosts
 - Three cinder hosts
 - Three swift hosts
@@ -99,7 +99,7 @@ Install software packages and load necessary dynamic kernel modules for networki
 
 #### Setting up storage devices.
 
-First, Determine storage devices on nodes that will be used for object storage. To do that, login to one of the swift nodes, list all disks by executing __sudo fdisk -l__. Available disks will be in the form of __/dev/sd\<x>__ except __dev/sda__ since it hosts the Operating System.
+First, determine storage devices on nodes that will be used for object storage. To do that, log into one of the swift nodes, list all disks by executing __sudo fdisk -l__. Available disks will be in the form of __/dev/sd\<x>__ except __dev/sda__ since it hosts the Operating System.
 
 If you still on the swift node, log out and return to your deployment node under __/opt/osic-ref-impl/playbooks__ directory and add the correct disks names under disks list in __./vars/swift-disks.yml__
 
@@ -129,7 +129,7 @@ For its deployment OSA uses usually 3 networks to separate traffic between conta
 
 For that OSA will need a bridge on each host belonging to these networks. To do that, executing the playbook below will create these bridges with ip addresses of each bridge constructed by taking the last byte from the PXE ip address of the host and append it to the bridge network. For example if your host has 172.22.0.21 for its PXE interface, and if you configure your management_network to be 172.22.100.0/22, this playbook will create br-mgmt with its ip address equal to 172.22.100.__21__
 
-Now, first open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations.
+Now, first open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations. Add the vlan and subnet accordingly in the file.
 
 Then execute the following command:
 
@@ -152,19 +152,34 @@ Change to /etc/openstack_deploy:
     cd /etc/openstack_deploy
 
 1. Open openstack_user_config.yml file and edit:
-   * __cidr_networks__ to match your network configurations (these terms are usually mingled: Management and container networks, overlay and tunnel networks)
-   * __used_ips__ to exclude ip addresses from usage by OSA(ip addresses used by servers should be included here).
-   * __internal_lb_vip_address__ and __external_lb_vip_address__ to ip addresses of one of the controller nodes belonging to Management and Flat Network respectively.
+   * __cidr_networks__ - list subnet address and mask for container, tunnel, storage networks
+        - __Note:__ these terms are usually intermingled: management/container, overlay/tunnel
+   * __used_ips__ - put used ip address range of different networks should be included here to exclude ip addresses from usage by OSA
+   * __internal_lb_vip_address__ - put ip address of your first controller node belonging to Management Network
+        - ex. 172.22.12.23 if controller pxe address is 172.22.4.23 and managment network is 172.22.12.0/22
+   * __external_lb_vip_address__ - ip address of your first controller node belonging to Flat Network
+        - ex. 172.22.148.23 if controller pxe address is 172.22.4.23 and flat network is 172.22.148.0/22
 
-2. Move to __conf.d__ directory and edit:
-   * ip addresses of different hosts under compute_hosts, log_hosts, storage_hosts, network_hosts... to their ip addresses of the interface belonging to the management network (__infra hosts__ hosting infrastructure services are usually referencing controller hosts.)
-   * storage devices of your swift nodes you previously determined under __drives__ in __swift.yml__.
-
+2. Move to __conf.d__ directory and edit do following (read ALL before editing):
+   * Edit IPs in each file of __conf.d__ - compute.yml, infra.yml, network.yml, etc. IP should reflect respective node (compute, storage, etc.) interfaced to management network:
+        - ex. 172.22.12.27 if compute pxe address is 172.22.4.27 and management network is 172.22.12.0/22
+        - __infra hosts__ (infra.yml) hosting infrastructure services are usually referencing controller hosts
+        - for __swift-proxy_hosts__ in swift.yml add ip address of controller nodes belonging to management network
+   * Verify storage devices of your swift nodes you previously determined are under __drives__ in __swift.yml__.
 
 Configure service credentials by filling the user_secrets.yml manually or through OSA provided script:
 
     cd /opt/openstack-ansible/scripts
     python pw-token-gen.py --file /etc/openstack_deploy/user_secrets.yml
+
+__NOTE:__
+If you realized you did the wrong configurations for OSA in __/etc/openstack_deploy__ after running playbooks below. It is advised that you run the following:
+    - run __openstack-ansible lxc-containers-destroy.yml__ to destroy created containers from old run
+    - go back and correct your configurations
+    - run __rm /etc/openstack_deploy/openstack_inventory.json__ to remove old OSA inventory
+    - run __rm /etc/openstack_deploy/ansible_facts/*__ to remove facts from old run
+    - rerun playbook
+
 
 OpenStack Installation
 -----------------------
@@ -184,6 +199,15 @@ Run the Infratructure playbook to install the infrastructure services (Memcached
 Install OpenStack services (keystone, glane, cinder, nova, neutron, heat, horizon, ceilometer, swift)
 
     openstack-ansible setup-openstack.yml
+
+Verify Installation
+---------------------
+to verify working of your openstack cluster and see which services are installed:
+
+* ssh to one of your infra nodes
+* attach to the utility container where all openstack CLIs are installed
+* run: __source openrc__ 
+* run: __openstack catalog list__ to see services endpoints
 
 
 Congratulation! you have your OpenStack cluster running.
