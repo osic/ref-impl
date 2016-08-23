@@ -3,12 +3,12 @@ Reference Implementation (OSA) Deployment Process
 
 Table of Contents
 -----------------
-* [Intro](#Intro)
-* [Prepare deployment host](#Prepare deployment host)
-* [Prepare target hosts](#Prepare target hosts)
-* [Configuring OpenStack environment](#Configuring OpenStack environment)
-* [OpenStack Installation](#OpenStack Installation)
-
+* [Intro](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#Intro)
+* [Prepare deployment host](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#Prepare-deployment-host)
+* [Prepare target hosts](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#Prepare-target-hosts)
+* [Configuring OpenStack environment](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#Configuring-OpenStack-environment)
+* [OpenStack Installation](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#OpenStack-Installation)
+* [Verify Installation](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#verify-installation)
 Intro
 ------
 

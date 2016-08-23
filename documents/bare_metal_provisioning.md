@@ -12,10 +12,20 @@ Table of Contents
 Overview
 ---------
 
-You have have a number of bare metal servers and you want to build your own cloud on top of them. To achieve that goal, first step is to have your bare metal servers provisioned with an Operating system, most likely Linux if you will be using later an Open Source platform to build your cloud. On a production deployment, the process of deploying all these servers starts by manually provisioning  the first host from your servers. This host will become your deployment host and will be used later to provision the rest of the servers by booting them over Network. This mechanism is called PXE Booting where servers use their PXE-enabled Network Interface Cards to boot from them as any other boot device.
+You have a number of bare metal servers and you want to build your own cloud on top of them. To achieve that goal, first step is to have your bare metal servers provisioned with an Operating system, most likely Linux if you will be using later an Open Source platform to build your cloud. On a production deployment, the process of deploying all these servers starts by manually provisioning  the first host from your servers. This host will become your deployment host and will be used later to provision the rest of the servers by booting them over Network. This mechanism is called PXE Booting where servers use their PXE-enabled Network Interface Cards to boot from them as any other boot device.
 
 Provisioning the Deployment Host
 --------------------------------
+
+### ILO overview
+
+ILO or Integrated Lights-Out, is a card integrated to the motherboard in most HP ProLiant servers which allows users to remotely configure, monitor and connect to servers even though no Operating System is installed, usually called out-of-band management. ILO has its own network interface and is commonly used for:
+
+* Power control of the server
+* Mount physical CD/DVD drive or image remotely
+* Request an Integrated Remote Console for the server
+* Monitor server health
+
 
 ### Manually Provision the Deployment Host
 
@@ -24,9 +34,10 @@ First, download a [modified Ubuntu Server 14.04.3 ISO](http://23.253.105.87/ubun
 Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iLO. Whatever is easiest.
 
 __NOTE:__ to deploy a host through ILO:
-1.  Find the host ILO ip address through a web browser
-2. Login with the ILO credentials
-3. Request a remote console from the GUI (.NET console for windows and Java for other OSes).
+
+1.  Find the host ILO ip address through a web browser.
+2. Login with the ILO credentials.
+3. Request a __remote console__ from the GUI (.NET console for windows or Java console for other OSes).
 4. To deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__ then select the Ubuntu image you downloaded to your local directory. Depending on your browser and OS, If you are using the Java console, you may need to allow your java plugin to run in unsafe mode, so that it can access the ubuntu image from your local directory.
 5. Click the __Power Switch__ tab and select __Reset__ to reboot the host from the image.
 
@@ -71,7 +82,7 @@ You will need to update the Linux kernel on the deployment host in order to get 
 
     apt-get update; apt-get install -y linux-generic-lts-xenial
 
-When the update finishes running, reboot the server and proceed with the rest of the guide.
+When the update finishes running, __reboot__ the server and proceed with the rest of the guide.
 
 Download and Setup the osic-prep LXC Container
 ----------------------------------------------
@@ -202,7 +213,7 @@ Go to root home directory
 
 You will need to obtain the MAC address of the network interface (e.g. p1p1) configured to PXE boot on every server. Be sure the MAC addresses are mapped to their respective hostname.
 
-You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that you wish to assing for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Please put hostnames that are meaningful to you like controller01, controller02, etc. Use the information from your onboarding email to create the CSV.
+You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that you wish to assing for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Please put hostnames that are meaningful to you like controller01, controller02, etc. Use the information from your onboarding email to create the CSV. It is recommended that you specify three hosts as your controllers and at least three swift nodes if you decide to deploy swift as well.
 
 For example:
 
