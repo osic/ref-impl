@@ -6,8 +6,8 @@ Table of Contents
 * [Intro](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#intro)
 * [Prepare deployment host](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#prepare-deployment-host)
 * [Prepare target hosts](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#prepare-target-hosts)
-* [Configuring OpenStack environment](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#configuring-openStack-environment)
-* [OpenStack Installation](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#openStack-Installation)
+* [Configuring OpenStack environment](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#configuring-openstack-environment)
+* [OpenStack Installation](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#openstack-installation)
 * [Verify Installation](https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md#verify-installation)
 
 
