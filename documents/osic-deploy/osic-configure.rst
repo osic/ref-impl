@@ -2,8 +2,21 @@
 Configuring the LXC container
 =============================
 
-Make the following configuration changes to the pre-packaged LXC
-container.
+This pre-packaged LXC container contains a tool you need to pxeboot the rest of
+the servers called Cobbler
+
+Cobbler overview
+~~~~~~~~~~~~~~~~~
+
+There is a numerous tools that implement the PXE mechanism. However, we decided 
+here to use Cobbler since it is a powerful, easy to use and handy when it comes 
+to quickly setting up network installation environments. Cobbler is a Linux based 
+provisioning system which lets you, among other things, configure Network installation 
+for each server from its MAC address, manage DNS and serve DHCP requests, etc.
+
+
+Configure Cobbler
+~~~~~~~~~~~~~~~~~
 
 #. Attach the LXC container:
 

@@ -1,11 +1,39 @@
 .. _osic-provisioning:
 
+============
+Overview
+===========
+
+You have a number of bare metal servers and you want to build your own 
+cloud on top of them. To achieve that goal, first step is to have your 
+bare metal servers provisioned with an Operating system, most likely 
+Linux if you will be using later an Open Source platform to build your 
+cloud. On a production deployment, the process of deploying all these 
+servers starts by manually provisioning the first host from your servers.
+This host will become your deployment host and will be used later to provision 
+the rest of the servers by booting them over Network. This mechanism 
+is called PXE Booting where servers use their PXE-enabled Network 
+Interface Cards to boot from them as any other boot device.
+
 ================================
 Provisioning the deployment host
 ================================
 
-Learn how to manually provision your first deployment host and how to
+Learn how to manually provision your first deployment host using ILO and how to
 provision the rest of your servers using PXE.
+
+ILO overview
+~~~~~~~~~~~~
+
+ILO or Integrated Lights-Out, is a card integrated to the motherboard in most
+HP ProLiant servers which allows users to remotely configure, monitor and connect 
+to servers even though no Operating System is installed, usually called out-of-band management. 
+ILO has its own network interface and is commonly used for:
+
+#. Power control of the server
+#. Mount physical CD/DVD drive or image remotely
+#. Request an Integrated Remote Console for the server
+#. Monitor server health
 
 Manually provisioning the deployment host
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
