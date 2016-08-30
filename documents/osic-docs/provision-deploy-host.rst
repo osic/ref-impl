@@ -16,7 +16,7 @@ network interface and is commonly used for:
 -  Request an Integrated Remote Console for the server
 -  Monitor server health
 
-Manually Provision the Deployment Host
+Manually provision the deployment host
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 First, download a `modified Ubuntu Server 14.04.3
@@ -29,8 +29,8 @@ iDRAC, or iLO. Whatever is easiest.
 
 **NOTE:** to deploy a host through ILO:
 
-1. Find the host ILO ip address through a web browser.
-2. Login with the ILO credentials.
+1. Open a web browser and browse to the host's ILO IP address.
+2. Login with the ILO credentials
 3. Request a **remote console** from the GUI (.NET console for windows
    or Java console for other OSes).
 4. To deploy the server, select the **Virtual Drives** tab from the ILO
@@ -54,16 +54,17 @@ begin installation:
 
 2. Hit **Fn + F6**
 
-3. Dismiss the **Expert mode** menu by hiting **Esc**.
+3. Dismiss the **Expert mode** menu by hitting **Esc**.
 
 4. Scroll to the beginning of the line and delete
-   **file=/cdrom/preseed/ubuntu-server.seed**.
+   ``file=/cdrom/preseed/ubuntu-server.seed``.
 
-5. Type **preseed/url=http://23.253.105.87/osic.seed**
+5. Type ``preseed/url=http://23.253.105.87/osic.seed`` in its place.
 
-6. Hit **Enter** to begin the install process.
+6. Hit **Enter** to begin the install process. The console may appear to
+   freeze for sometime.
 
-7. You will be prompted for the following menus:
+7. You will (eventually) be prompted for the following menus:
 
 -  Select a language
 -  Select your location
@@ -86,7 +87,7 @@ remainder of the Ubuntu install will be unattended.
 The Ubuntu install will be finished when the system reboots and a login
 prompt appears.
 
-Update linux kernel
+Update Linux kernel
 ~~~~~~~~~~~~~~~~~~~
 
 Once the system boots, it can be SSH'd to using the IP address you

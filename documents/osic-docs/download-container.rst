@@ -11,13 +11,13 @@ Cobbler overview
 ~~~~~~~~~~~~~~~~
 
 There is a numerous tools that implement the PXE mechanism. However, we
-decided here to use Cobbler since it is a powerful, easy to use and
-handy when it comes to quickly setting up network installation
-environments. Cobbler is a Linux based provisioning system which lets
-you, among other things, configure Network installation for each server
-from its MAC address, manage DNS and serve DHCP requests, etc.
+decided here to use Cobbler since it is powerful, easy to use and handy
+when it comes to quickly setting up network installation environments.
+Cobbler is a Linux based provisioning system which lets you, among other
+things, configure Network installation for each server from its MAC
+address, manage DNS and serve DHCP requests, etc.
 
-Setup LXC linux bridge
+Setup LXC Linux bridge
 ~~~~~~~~~~~~~~~~~~~~~~
 
 In order to use the LXC container, a new bridge will need to be created:
@@ -63,7 +63,7 @@ following commands fail and you lose network connectivity:
 
     ifdown p1p1; ifup br-pxe
 
-Install and configure the LXC container
+Install LXC and configure LXC container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Install the necessary LXC package:

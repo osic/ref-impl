@@ -17,7 +17,7 @@ are mapped to their respective hostname.
 
 You can do this by logging into the LXC container and creating a CSV
 file named **ilo.csv**. **Each line should have a hostname that you wish
-to assing for the server, its ILO IP address, type of node you wish it
+to assign for the server, its ILO IP address, type of node you wish it
 to be (controller, logging, compute, cinder, swift).** Please put
 hostnames that are meaningful to you like controller01, controller02,
 etc. Use the information from your onboarding email to create the CSV.
@@ -102,8 +102,8 @@ deployment host and container (ex. If you use .2 and .3 for deployment
 and container, start with .4 controller1) and make sure to change
 **host-ip,host-netmask,host-gateway** in the script
 (**172.22.0.$COUNT,255.255.252.0,172.22.0.1**) to match your PXE network
-configurations. In case you realized later that you have configured
-wrong ips here, you need to restart from this point.
+configurations. If you later discover that you have configured the wrong
+ips here, you need to restart from this point.
 
 ::
 
