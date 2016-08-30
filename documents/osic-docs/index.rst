@@ -3,8 +3,8 @@ OSIC deployment process
 =======================
 
 .. toctree::
-   maxdepth: 2
-   
+   :maxdepth: 2
+
    provision-deploy-host.rst
    download-container.rst
    pxe-boot-servers.rst
