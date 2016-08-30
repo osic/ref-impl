@@ -1,12 +1,10 @@
 OSIC Reference Implementation Documentation
 ===========================================
 
-Contents:
-
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
-   osic-deploy/index.rst
+   osic-docs/index.rst
 
 
 * :ref:`search`
