@@ -12,7 +12,7 @@ Table of Contents
 Overview
 ---------
 
-You have a number of bare metal servers and you want to build your own cloud on top of them. To achieve that goal, first step is to have your bare metal servers provisioned with an Operating system, most likely Linux if you will be using later an Open Source platform to build your cloud. On a production deployment, the process of deploying all these servers starts by manually provisioning  the first host from your servers. This host will become your deployment host and will be used later to provision the rest of the servers by booting them over Network. This mechanism is called PXE Booting where servers use their PXE-enabled Network Interface Cards to boot from them as any other boot device.
+You have a number of bare metal servers and you want to build your own cloud on top of them. To achieve that goal, the first step is to have your bare metal servers provisioned with an Operating System, most likely Linux if you will later be using an Open Source platform to build your cloud. On a production deployment, the process of deploying all these servers starts by manually provisioning  the first of your servers. This host will become your deployment host and will be used later to provision the rest of the servers by booting them over Network. This mechanism is called PXE Booting where servers use their PXE-enabled Network Interface Cards to boot from a network hosted kernel.
 
 Provisioning the Deployment Host
 --------------------------------
@@ -35,8 +35,8 @@ Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM, iDRAC, or iL
 
 __NOTE:__ to deploy a host through ILO:
 
-1.  Find the host ILO ip address through a web browser.
-2. Login with the ILO credentials.
+1. Open a web browser and browse to the host's ILO IP address.
+2. Login with the ILO credentials
 3. Request a __remote console__ from the GUI (.NET console for windows or Java console for other OSes).
 4. To deploy the server, select the __Virtual Drives__ tab from the ILO console, press __Image File CD/DVD-ROM__ then select the Ubuntu image you downloaded to your local directory. Depending on your browser and OS, If you are using the Java console, you may need to allow your java plugin to run in unsafe mode, so that it can access the ubuntu image from your local directory.
 5. Click the __Power Switch__ tab and select __Reset__ to reboot the host from the image.
@@ -49,15 +49,15 @@ Once the deployment host is booted to the ISO, follow these steps to begin insta
 
 2. Hit __Fn + F6__
 
-3. Dismiss the __Expert mode__ menu by hiting __Esc__.
+3. Dismiss the __Expert mode__ menu by hitting __Esc__.
 
-4. Scroll to the beginning of the line and delete __file=/cdrom/preseed/ubuntu-server.seed__.
+4. Scroll to the beginning of the line and delete `file=/cdrom/preseed/ubuntu-server.seed`.
 
-5. Type __preseed/url=http://23.253.105.87/osic.seed__
+5. Type `preseed/url=http://23.253.105.87/osic.seed` in its place.
 
-6. Hit __Enter__ to begin the install process.
+6. Hit __Enter__ to begin the install process. The console may appear to freeze for sometime.
 
-7. You will be prompted for the following menus:
+7. You will (eventually) be prompted for the following menus:
 
    * Select a language
    * Select your location
@@ -93,7 +93,7 @@ Next, you will download a pre-packaged LXC container that contains a tool you ne
 
 ### Cobbler overview
 
-There is a numerous tools that implement the PXE mechanism. However, we decided here to use Cobbler since it is a powerful, easy to use and handy when it comes to quickly setting up network installation environments. Cobbler is a Linux based provisioning system which lets you, among other things, configure Network installation for each server from its MAC address, manage DNS and serve DHCP requests, etc.
+There is a numerous tools that implement the PXE mechanism. However, we decided here to use Cobbler since it is powerful, easy to use and handy when it comes to quickly setting up network installation environments. Cobbler is a Linux based provisioning system which lets you, among other things, configure Network installation for each server from its MAC address, manage DNS and serve DHCP requests, etc.
 
 ### Setup LXC Linux Bridge
 
@@ -213,7 +213,7 @@ Go to root home directory
 
 You will need to obtain the MAC address of the network interface (e.g. p1p1) configured to PXE boot on every server. Be sure the MAC addresses are mapped to their respective hostname.
 
-You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that you wish to assing for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Please put hostnames that are meaningful to you like controller01, controller02, etc. Use the information from your onboarding email to create the CSV. It is recommended that you specify three hosts as your controllers and at least three swift nodes if you decide to deploy swift as well.
+You can do this by logging into the LXC container and creating a CSV file named __ilo.csv__. __Each line should have a hostname that you wish to assign for the server, its ILO IP address, type of node you wish it to be (controller, logging, compute, cinder, swift).__ Please put hostnames that are meaningful to you like controller01, controller02, etc. Use the information from your onboarding email to create the CSV. It is recommended that you specify three hosts as your controllers and at least three swift nodes if you decide to deploy swift as well.
 
 For example:
 
@@ -271,7 +271,7 @@ An example for openstack-ansible installations:
 
 To do just that, the following script will loop through each iLO IP address in __ilo.csv__ to obtain the MAC address of the network interface configured to PXE boot and setup rest of information as well as shown above:
 
-__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1) and make sure to change __host-ip,host-netmask,host-gateway__ in the script (__172.22.0.$COUNT,255.255.252.0,172.22.0.1__) to match your PXE network configurations. In case you realized later that you have configured wrong ips here, you need to restart from this point.
+__NOTE:__ make sure to Set COUNT to the first usable address after deployment host and container (ex. If you use .2 and .3 for deployment and container, start with .4 controller1) and make sure to change __host-ip,host-netmask,host-gateway__ in the script (__172.22.0.$COUNT,255.255.252.0,172.22.0.1__) to match your PXE network configurations. If you later discover that you have configured the wrong ips here, you need to restart from this point.
 
 ```
 COUNT=23
