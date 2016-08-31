@@ -228,11 +228,10 @@ Begin PXE booting
      If the servers are already shut down, we recommend you change
      `power reset` with `power on` in the above command.
 
-#. After PXE booting, a call will be made to the cobbler API to ensure the server
-   does not PXE boot again.
+After PXE booting, a call will be made to the cobbler API to ensure the server
+does not PXE boot again.
 
-#. To quickly see which servers are still set to PXE boot, run the
-   following command:
+#. Run the following command to see which servers are still set to PXE boot:
 
    .. code::
 
