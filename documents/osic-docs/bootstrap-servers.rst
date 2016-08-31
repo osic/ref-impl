@@ -50,7 +50,7 @@ The LXC container does not have all of the new server's SSH fingerprints
 in the ``known_hosts`` file. This is needed to bypass prompts and
 create a silent login when SSHing to servers.
 
-#. Add the SSH fingerprints to``known_hosts`` by running the following
+#. Add the SSH fingerprints to ``known_hosts`` by running the following
    command:
 
    .. code::
