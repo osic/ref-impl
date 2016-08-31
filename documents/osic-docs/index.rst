@@ -13,13 +13,15 @@ OSIC deployment process
 Overview
 ~~~~~~~~
 
-You have a number of bare metal servers and you want to build your own
-cloud on top of them. To achieve that goal, the first step is to have
-your bare metal servers provisioned with an Operating System, most
-likely Linux if you will later be using an Open Source platform to build
-your cloud. On a production deployment, the process of deploying all
-these servers starts by manually provisioning the first of your servers.
-This host will become your deployment host and will be used later to
-provision the rest of the servers by booting them over Network. This
-mechanism is called PXE Booting where servers use their PXE-enabled
-Network Interface Cards to boot from a network hosted kernel.
+The scenario for the following document assumes you have a number
+of bare metal servers and want to build your own cloud on top of them.
+
+This document recommends provisioning your bare metal servers with your
+chosen operating system (OS). We recommend using a Linux OS if you later
+want to use an Open Source platform to build your cloud.
+
+In a production deployment, the process of deploying all
+your servers starts by manual provisioning. The host will become your
+deployment host and will be used later to provision the rest of your servers
+by booting them over the network. This is called
+`PXE Booting <https://en.wikipedia.org/wiki/Preboot_Execution_Environment>`_.
