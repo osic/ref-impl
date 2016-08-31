@@ -5,107 +5,111 @@ PXE boot the servers
 Gather MAC addresses
 ~~~~~~~~~~~~~~~~~~~~
 
-Go to root home directory
+#. Go to root home directory
 
-::
+   .. code:: console
 
-    cd /root
+      cd /root
 
-You will need to obtain the MAC address of the network interface (e.g.
-p1p1) configured to PXE boot on every server. Be sure the MAC addresses
-are mapped to their respective hostname.
+#. Obtain the MAC address of the network interface (For example, p1p1) that
+   is configured to PXE boot on every server. The MAC addresses
+   must be mapped to their respective hostname.
 
-You can do this by logging into the LXC container and creating a CSV
-file named **ilo.csv**. **Each line should have a hostname that you wish
-to assign for the server, its ILO IP address, type of node you wish it
-to be (controller, logging, compute, cinder, swift).** Please put
-hostnames that are meaningful to you like controller01, controller02,
-etc. Use the information from your onboarding email to create the CSV.
-It is recommended that you specify three hosts as your controllers and
-at least three swift nodes if you decide to deploy swift as well.
+#. Log into the LXC container and create a CSV file named ``ilo.csv``.
 
-For example:
+   .. note::
+      
+      Each line should have a hostname to assign for the server, its ILO IP
+      address, type of node it will be (controller, logging, compute, cinder,
+      swift). Ensure hostnames are meaningful to you, For example, `controller01`,
+      and `controller02`.
 
-::
+#. Use the information from your onboarding email to create the CSV.
+   We recommend that you specify three hosts as your controllers and
+   at least three swift nodes if you decide to deploy swift as well.
 
-    729427-controller01,10.15.243.158,controller
-    729426-controller02,10.15.243.157,controller
-    729425-controller03,10.15.243.156,controller
-    729424-logging01,10.15.243.155,logging
-    729423-logging02,10.15.243.154,logging
-    729422-logging03,10.15.243.153,logging
-    729421-compute01,10.15.243.152,compute
-    729420-compute02,10.15.243.151,compute
-    729419-compute03,10.15.243.150,compute
-    729418-compute04,10.15.243.149,compute
-    729417-compute05,10.15.243.148,compute
-    729416-compute06,10.15.243.147,compute
-    729415-compute07,10.15.243.146,compute
-    729414-compute08,10.15.243.145,compute
-    729413-cinder01,10.15.243.144,cinder
-    729412-cinder02,10.15.243.143,cinder
-    729411-cinder03,10.15.243.142,cinder
-    729410-swift01,10.15.243.141,swift
-    729409-swift02,10.15.243.140,swift
-    729408-swift03,10.15.243.139,swift
+   For example:
 
-Be sure to remove any spaces in your CSV file. We also recommend
-removing the deployment host you manually provisioned from this CSV so
-you do not accidentally reboot the host you are working from.
+   .. code:: ini
 
-Once this information is collected, it will be used to create another
-CSV file that will be the input for many different steps in the build
+      729427-controller01,10.15.243.158,controller
+      729426-controller02,10.15.243.157,controller
+      729425-controller03,10.15.243.156,controller
+      729424-logging01,10.15.243.155,logging
+      729423-logging02,10.15.243.154,logging
+      729422-logging03,10.15.243.153,logging
+      729421-compute01,10.15.243.152,compute
+      729420-compute02,10.15.243.151,compute
+      729419-compute03,10.15.243.150,compute
+      729418-compute04,10.15.243.149,compute
+      729417-compute05,10.15.243.148,compute
+      729416-compute06,10.15.243.147,compute
+      729415-compute07,10.15.243.146,compute
+      729414-compute08,10.15.243.145,compute
+      729413-cinder01,10.15.243.144,cinder
+      729412-cinder02,10.15.243.143,cinder
+      729411-cinder03,10.15.243.142,cinder
+      729410-swift01,10.15.243.141,swift
+      729409-swift02,10.15.243.140,swift
+      729408-swift03,10.15.243.139,swift
+
+   Remove any spaces in your CSV file. We recommend removing the deployment
+   host you manually provisioned from this CSV so you do not accidentally
+   reboot the host you are working from.
+
+After the information collects, use this create another
+CSV file to be the input for many different steps in the build
 process.
 
 Create input CSV
 ~~~~~~~~~~~~~~~~
 
-Now, we will use a script to create a CSV named **input.csv** in the
-following format.
+#. Use the following script to create a CSV named ``input.csv`` in the
+   following format:
 
-::
+   .. code::
 
-    hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
+      hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
 
-If this will be an openstack-ansible installation, it is recommended to
-order the rows in the CSV file in the following order, otherwise order
-the rows however you wish:
+#. (Optional) If this will be an OpenStack-Ansible installation, we recommend
+   ordering the rows in the CSV file in the following order:
 
-1. Controller nodes
-2. Logging nodes
-3. Compute nodes
-4. Cinder nodes
-5. Swift nodes
+   #. Controller nodes
+   #. Logging nodes
+   #. Compute nodes
+   #. Cinder nodes
+   #. Swift nodes
 
-An example for openstack-ansible installations:
+   An OpenStack-Ansible example installation:
 
-::
+   .. code:: ini
 
-    744800-infra01.example.com,A0:36:9F:7F:70:C0,172.22.0.23,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744819-infra02.example.com,A0:36:9F:7F:6A:C8,172.22.0.24,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744820-infra03.example.com,A0:36:9F:82:8C:E8,172.22.0.25,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744821-logging01.example.com,A0:36:9F:82:8C:E9,172.22.0.26,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744822-compute01.example.com,A0:36:9F:82:8C:EA,172.22.0.27,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744823-compute02.example.com,A0:36:9F:82:8C:EB,172.22.0.28,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
-    744824-cinder01.example.com,A0:36:9F:82:8C:EC,172.22.0.29,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-cinder
-    744825-object01.example.com,A0:36:9F:7F:70:C1,172.22.0.30,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
-    744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
-    744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+      744800-infra01.example.com,A0:36:9F:7F:70:C0,172.22.0.23,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+      744819-infra02.example.com,A0:36:9F:7F:6A:C8,172.22.0.24,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+      744820-infra03.example.com,A0:36:9F:82:8C:E8,172.22.0.25,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+      744821-logging01.example.com,A0:36:9F:82:8C:E9,172.22.0.26,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+      744822-compute01.example.com,A0:36:9F:82:8C:EA,172.22.0.27,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+      744823-compute02.example.com,A0:36:9F:82:8C:EB,172.22.0.28,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-generic
+      744824-cinder01.example.com,A0:36:9F:82:8C:EC,172.22.0.29,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-cinder
+      744825-object01.example.com,A0:36:9F:7F:70:C1,172.22.0.30,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+      744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
+      744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
 
-To do just that, the following script will loop through each iLO IP
-address in **ilo.csv** to obtain the MAC address of the network
-interface configured to PXE boot and setup rest of information as well
-as shown above:
+The following script loops through each iLO IP address in ``ilo.csv`` to
+obtain the MAC address of the network interface configured to PXE boot and
+setup rest of information as well as shown above.
 
-**NOTE:** make sure to Set COUNT to the first usable address after
-deployment host and container (ex. If you use .2 and .3 for deployment
-and container, start with .4 controller1) and make sure to change
-**host-ip,host-netmask,host-gateway** in the script
-(**172.22.0.$COUNT,255.255.252.0,172.22.0.1**) to match your PXE network
-configurations. If you later discover that you have configured the wrong
-ips here, you need to restart from this point.
+.. note::
 
-::
+   Make sure to set `COUNT` to the first usable address after
+   deployment host and container. For example, if you use .2 and .3 for
+   deployment and container, start with .4 controller1. 
+   Make sure to change ``host-ip,host-netmask,host-gateway`` in the script
+   (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE network
+   configurations. If you later discover that you have configured the wrong
+   IPs here, you need to restart from this point.
+
+.. code:: ini
 
     COUNT=23
     for i in $(cat ilo.csv)
@@ -132,117 +136,127 @@ ips here, you need to restart from this point.
         (( COUNT++ ))
     done
 
-**NOTE:** before you continue, make sure the generated script
-**input.csv** has all the information as shown previously. In case you
-run into some missing information, you may need to paste the above
-command in a bash script and execute it.
+.. important::
+  
+   Before continuing, make sure the generated script
+   ``input.csv`` has all the information as shown previously. If you
+   run into some missing information, you may need to paste the above
+   command in a bash script and execute it.
 
-Assigning a cobbler profile
+Assigning a Cobbler profile
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The last column in the CSV file specifies which Cobbler Profile to map
-the Cobbler System to. You have the following options:
+The last column in the CSV file specifies which Cobbler profile to map
+the Cobbler system to. You have the following options:
 
--  ubuntu-14.04.3-server-unattended-osic-generic
--  ubuntu-14.04.3-server-unattended-osic-generic-ssd
--  ubuntu-14.04.3-server-unattended-osic-cinder
--  ubuntu-14.04.3-server-unattended-osic-cinder-ssd
--  ubuntu-14.04.3-server-unattended-osic-swift
--  ubuntu-14.04.3-server-unattended-osic-swift-ssd
+* ubuntu-14.04.3-server-unattended-osic-generic
 
-Typically, you will use the
-**ubuntu-14.04.3-server-unattended-osic-generic** Cobbler Profile. It
-will create one RAID10 raid group. The operating system will see this as
-**/dev/sda**.
+  Typically, you will use the `ubuntu-14.04.3-server-unattended-osic-generic`
+  Cobbler profile. It creates one RAID10 raid group. The operating system will
+  see this as ``/dev/sda``.
+  
+* ubuntu-14.04.3-server-unattended-osic-generic-ssd
+* ubuntu-14.04.3-server-unattended-osic-cinder
 
-The **ubuntu-14.04.3-server-unattended-osic-cinder** Cobbler Profile
-will create one RAID1 raid group and a second RAID10 raid group. These
-will be seen by the operating system as **/dev/sda** and **/dev/sdb**,
-respectively.
+  The `ubuntu-14.04.3-server-unattended-osic-cinder` Cobbler profile
+  creates one RAID1 raid group and a second RAID10 raid group. These
+  will be seen by the operating system as ``/dev/sda`` and ``/dev/sdb``,
+  respectively.
+  
+* ubuntu-14.04.3-server-unattended-osic-cinder-ssd
+* ubuntu-14.04.3-server-unattended-osic-swift
+  
+  The `ubuntu-14.04.3-server-unattended-osic-swift` Cobbler profile
+  creates one RAID1 raid group and 10 RAID0 raid groups each containing one
+  disk. The HP storage controller does not present a disk to the operating
+  system unless it is in a RAID group. Because swift needs to deal with
+  individual, non-RAIDed disks, the only way to do this is to put each
+  disk in its own RAID0 raid group.
+  
+* ubuntu-14.04.3-server-unattended-osic-swift-ssd
 
-The **ubuntu-14.04.3-server-unattended-osic-swift** Cobbler Profile will
-create one RAID1 raid group and 10 RAID0 raid groups each containing one
-disk. The HP Storage Controller will not present a disk to the operating
-system unless it is in a RAID group. Because Swift needs to deal with
-individual, non-RAIDed disks, the only way to do this is to put each
-disk in its own RAID0 raid group.
+.. important::
 
-You will only use the **ssd** Cobbler Profiles if the servers contain
-SSD drives.
+   You will only use the `ssd` Cobbler profiles if the servers contain SSD drives.
 
-Generate cobbler systems
+Generate Cobbler systems
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
-With this CSV file in place, run the **generate\_cobbler\_systems.py**
-script to generate a **cobbler system** command for each server and pipe
-the output to ``bash`` to actually add the **cobbler system** to
-Cobbler:
+The ``generate_cobbler_systems.py`` script will generate a list of
+`cobbler system` commands to the standard output.
 
-::
+#. If you pipe the standard output to ``bash``, all the servers will be
+   added to Cobbler (internally done by issuing a cobbler system command):
 
-    cd /root/rpc-prep-scripts
+   .. code:: console
 
-    python generate_cobbler_system.py /root/input.csv | bash
+      cd /root/rpc-prep-scripts
 
-Verify the **cobbler system** entries were added by running
-``cobbler system list``.
+      python generate_cobbler_system.py /root/input.csv | bash
 
-Once all of the **cobbler systems** are setup, run ``cobbler sync``.
+#. Verify the `cobbler system` entries were added by running
+   ``cobbler system list``.
+
+#. Once all of the `cobbler systems` are setup, run the following command:
+
+   .. code::
+
+      cobbler sync
 
 Begin PXE booting
 ~~~~~~~~~~~~~~~~~
 
-To begin PXE booting, Set the servers to boot from PXE on the next
-reboot and reboot all of the servers with the following command (if the
-deployment host is the first controller, you will want to **remove** it
-from the **ilo.csv** file so you don't reboot the host running the LXC
-container):
+#. Set the servers to boot from PXE on the next reboot and reboot all of the
+   servers with the following command (if the deployment host is the first
+   controller, you will want to remove it from the ``ilo.csv`` file so you do not
+   reboot the host running the LXC container):
 
-**NOTE**: change root and calvincalvin below to your ILO username and
-password.
+   .. code::
 
-::
+      for i in $(cat /root/ilo.csv)
+      do
+      NAME=$(echo $i | cut -d',' -f1)
+      IP=$(echo $i | cut -d',' -f2)
+      echo $NAME
+      ipmitool -I lanplus -H $IP -U USERNAME -P PASSWORD chassis bootdev pxe
+      sleep 1
+      ipmitool -I lanplus -H $IP -U USERNAME -P PASSWORD power reset
+      done
 
-    for i in $(cat /root/ilo.csv)
-    do
-    NAME=$(echo $i | cut -d',' -f1)
-    IP=$(echo $i | cut -d',' -f2)
-    echo $NAME
-    ipmitool -I lanplus -H $IP -U root -P calvincalvin chassis bootdev pxe
-    sleep 1
-    ipmitool -I lanplus -H $IP -U root -P calvincalvin power reset
-    done
+  .. note::
 
-**NOTE:** if the servers are already shut down, you might want to change
-**power reset** with **power on** in the above command.
+     If the servers are already shut down, we recommend you change
+     `power reset` with `power on` in the above command.
 
-As the servers finish PXE booting, a call will be made to the cobbler
-API to ensure the server does not PXE boot again.
+#. After PXE booting, a call will be made to the cobbler API to ensure the server
+does not PXE boot again.
 
-To quickly see which servers are still set to PXE boot, run the
-following command:
+#. To quickly see which servers are still set to PXE boot, run the
+   following command:
 
-::
+   .. code::
 
-    for i in $(cobbler system list)
-    do
-    NETBOOT=$(cobbler system report --name $i | awk '/^Netboot/ {print $NF}')
-    if [[ ${NETBOOT} == True ]]; then
-    echo -e "$i: netboot_enabled : ${NETBOOT}"
-    fi
-    done
+      for i in $(cobbler system list)
+      do
+      NETBOOT=$(cobbler system report --name $i | awk '/^Netboot/ {print $NF}')
+      if [[ ${NETBOOT} == True ]]; then
+      echo -e "$i: netboot_enabled : ${NETBOOT}"
+      fi
+      done
 
-Any server which returns **True** has not yet PXE booted. Rerun last
-command until there is no output to make sure all your servers has
-finished pxebooting. Time to wait depends on the number of servers you
-are deploying. If somehow, one or two servers did not go through for a
-long time, you may want to investigate them with their ILO console. In
-most cases, this is due to rebooting those servers either fails or
-hangs, so you may need to reboot them manually with ILO.
+   Any server which returns ``True`` has not yet PXE booted. Rerun last
+   command until there is no output to make sure all your servers has
+   finished pxebooting. Time to wait depends on the number of servers you
+   are deploying. If somehow, one or two servers did not go through for a
+   long time, you may want to investigate them with their ILO console. In
+   most cases, this is due to rebooting those servers either fails or
+   hangs, so you may need to reboot them manually with ILO.
 
-**NOTE**: In case you want to re-pxeboot servers, make sure to clean old
-settings from cobbler with the following command:
+   .. note::
 
-::
+      In case you want to re-pxeboot servers, make sure to clean old
+      settings from cobbler with the following command:
 
-    for i in `cobbler system list`; do cobbler system remove --name $i; done;
+      .. code::
+
+         for i in `cobbler system list`; do cobbler system remove --name $i; done;
