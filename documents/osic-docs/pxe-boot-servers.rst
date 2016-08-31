@@ -229,7 +229,7 @@ Begin PXE booting
      `power reset` with `power on` in the above command.
 
 #. After PXE booting, a call will be made to the cobbler API to ensure the server
-does not PXE boot again.
+   does not PXE boot again.
 
 #. To quickly see which servers are still set to PXE boot, run the
    following command:
