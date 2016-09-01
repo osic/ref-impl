@@ -41,7 +41,7 @@ Manually provision the deployment host
 
    #. To deploy the server, select ``Virtual Drives`` the ILO
       console.
-   #. Press ``Image File CD/DVD-ROM``then select the Ubuntu image you
+   #. Press ``Image File CD/DVD-ROM`` then select the Ubuntu image you
       downloaded to your local directory.
 
       .. note::
@@ -62,9 +62,9 @@ begin installation:
 
 #. Select ``Language``.
 
-#. Hit ``Fn`` and ``F6`` simultaneously.
+#. Hit ``Fn`` and ``F6``.
 
-#. Dismiss the `Expert mode` menu by hitting the ``Esc`` key.
+#. Dismiss the `Expert` mode menu by hitting the ``Esc`` key.
 
 #. Delete ``file=/cdrom/preseed/ubuntu-server.seed`` from the beginning of the
    line.
@@ -86,9 +86,7 @@ network interface - typically **p1p1** - and manually configure
 networking on the **PXE** network (refer to your onboarding email to
 find the **PXE** network information).
 
-#. At the prompt for name servers, insert:
-   
-   8.8.8.8 8.8.4.4.
+#. At the prompt for name servers, insert: `8.8.8.8 8.8.4.4`.
 
 #. An error will appear stating: "``/dev/sda`` contains GPT signatures".
    This indicates that it had a GPT table. If you encounter this error

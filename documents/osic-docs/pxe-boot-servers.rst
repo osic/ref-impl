@@ -11,7 +11,7 @@ Gather MAC addresses
 
       cd /root
 
-#. Obtain the MAC address of the network interface (For example, p1p1) that
+#. Obtain the MAC address of the network interface (For example, **p1p1v) that
    is configured to PXE boot on every server. The MAC addresses
    must be mapped to their respective hostname.
 
