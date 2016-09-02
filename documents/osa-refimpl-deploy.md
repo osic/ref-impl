@@ -30,7 +30,7 @@ Network layout between nodes will be as follows but you most likely will need to
 
 | Network type       | Subnet          | Vlan     |
 |--------------------|-----------------|----------|
-| HOSTS Network      | 172.22.0.0/22   | untagged |
+| HOSTS (PXE) Network| 172.22.0.0/22   | untagged |
 | MANAGEMENT Network | 172.22.100.0/22 | 830      |
 | STORAGE Network    | 172.22.104.0/22 | 831      |
 | OVERLAY Network    | 172.22.108.0/22 | 832      |
@@ -73,7 +73,7 @@ copy the hosts inventory from the osic-prep container to /opt/osic-ref-impl/play
 
     cp /var/lib/lxc/osic-prep/rootfs/root/osic-prep-ansible/hosts /opt/osic-ref-impl/playbooks/inventory/static-inventory.yml
 
-Make sure you include the deployment host in __static-inventory.yml__ as follows:
+Make sure you include the deployment host in __static-inventory.yml__ as follows: (172.22.0.21 should be changed to you deployment PXE address)
 
     [deploy]
     729429-deploy01 ansible_ssh_host=172.22.0.21
@@ -156,7 +156,7 @@ Change to /etc/openstack_deploy:
 1. Open openstack_user_config.yml file and edit:
    * __cidr_networks__ - list subnet address and mask for container, tunnel, storage networks
         - __Note:__ these terms are usually intermingled: management/container, overlay/tunnel
-   * __used_ips__ - put used ip address range of different networks should be included here to exclude ip addresses from usage by OSA
+   * __used_ips__ - put used ip addresses range of different networks here to prevent OSA from using them later
    * __internal_lb_vip_address__ - put ip address of your first controller node belonging to Management Network
         - ex. 172.22.12.23 if controller pxe address is 172.22.4.23 and managment network is 172.22.12.0/22
    * __external_lb_vip_address__ - ip address of your first controller node belonging to Flat Network
