@@ -19,12 +19,6 @@ from MAC addresses, manages DNS, and serves DHCP requests, to name a few functio
 Setup LXC Linux bridge
 ~~~~~~~~~~~~~~~~~~~~~~
 
-#. To use the LXC container, create a new bridge ``br-pxe``.
-
-   .. note::
-      
-      Follow these instructions very carefully.
-
 #. Install the necessary packages:
 
    .. code:: console
@@ -157,8 +151,7 @@ pre-packaged LXC container for it to function on your network.
       sed -i '/^server: / s/ .*/ 172.22.0.22/' /etc/cobbler/settings
 
 #. Open ``/etc/cobbler/dhcp.template`` and reconfigure your DHCP settings.
-
-#. Change the `subnet`, `netmask`, `option routers`, `option subnet-mask`,
+   Change the `subnet`, `netmask`, `option routers`, `option subnet-mask`,
    and `range dynamic-bootp` parameters to match your network:
 
    .. code::

@@ -39,7 +39,7 @@ Manually provision the deployment host
          
          This is a .NET console for windows or Java console for other OSes.
 
-   #. To deploy the server, select ``Virtual Drives`` the ILO
+   #. To deploy the server, select ``Virtual Drives`` from the ILO
       console.
    #. Press ``Image File CD/DVD-ROM`` then select the Ubuntu image you
       downloaded to your local directory.
@@ -53,9 +53,9 @@ Manually provision the deployment host
    #. Click ``Power Switch`` and select ``Reset`` to reboot the
       host from the image.
 
-#. Ensure you have unselected the Ubuntu ISO from the ILO console
-   (unselect Image File CD/DVD-ROM from the Virtual Drives tab). This ensures
-   future server reboots do not continue to use it to boot.
+   #. Ensure you have unselected the Ubuntu ISO from the ILO console
+      (unselect Image File CD/DVD-ROM from the Virtual Drives tab). This ensures
+      future server reboots do not continue to use it to boot.
 
 Once the deployment host is booted to the ISO, follow these steps to
 begin installation:
@@ -115,4 +115,4 @@ manually assigned.
 
       apt-get update; apt-get install -y linux-generic-lts-xenial
 
-#. After the update finishes, reboot the server.
+#. After the update finishes, **reboot** the server.

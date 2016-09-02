@@ -5,15 +5,15 @@ PXE boot the servers
 Gather MAC addresses
 ~~~~~~~~~~~~~~~~~~~~
 
+In order to PXE boot your servers, you need to obtain the MAC address of the
+network interface (For example, **p1p1**) that is configured to PXE boot on every
+server. The MAC addresses must be mapped to their respective hostname.
+
 #. Go to root home directory
 
    .. code:: console
 
       cd /root
-
-#. Obtain the MAC address of the network interface (For example, **p1p1v) that
-   is configured to PXE boot on every server. The MAC addresses
-   must be mapped to their respective hostname.
 
 #. Log into the LXC container and create a CSV file named ``ilo.csv``.
 
