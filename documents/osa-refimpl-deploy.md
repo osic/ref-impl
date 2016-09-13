@@ -129,9 +129,9 @@ For its deployment OSA uses usually 3 networks to separate traffic between conta
 * Storage Network which provides segregated access to Block Storage devices between Compute and Block Storage hosts.
 * Flat Network (optional) if you want to use openstack networking flat (untagged network).
 
-For that OSA will need a bridge on each host belonging to these networks. To do that, executing the playbook below will create these bridges with ip addresses of each bridge constructed by taking the last byte from the PXE ip address of the host and append it to the bridge network. For example if your host has 172.22.0.21 for its PXE interface, and if you configure your management_network to be 172.22.100.0/22, this playbook will create br-mgmt with its ip address equal to 172.22.100.__21__
+For that OSA will need a bridge on each host belonging to these networks. To do that, executing the playbook below will create these bridges with ip addresses of each bridge constructed by taking the last byte from the PXE ip address of the host and append it to the bridge network. For example if your host has 172.22.0.21 for its PXE interface, and if you configure your management_network to be 172.22.100.0/22, this playbook will create br-mgmt with its ip address equal to 172.22.100.__21__ on that host.
 
-Now, first open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations. Add the vlan and subnet accordingly in the file.
+Now, first open __/opt/osic-ref-impl/playbooks/vars/vlan_network_mapping.yml__ file and change settings there to match your network configurations. Change the vlan and subnet accordingly in the file (find these information from onboarding mail).
 
 Then execute the following command:
 
@@ -207,8 +207,8 @@ Verify Installation
 to verify working of your openstack cluster and see which services are installed:
 
 * ssh to one of your infra nodes
-* attach to the utility container where all openstack CLIs are installed
-* run: __source openrc__ 
+* attach to the utility container where all openstack CLIs are installed (run lxc-ls to list containers and then lxc-attach -n __utility_container_name__)
+* run: __source openrc__ from __/root__ directory
 * run: __openstack catalog list__ to see services endpoints
 
 
