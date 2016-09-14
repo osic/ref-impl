@@ -2,19 +2,17 @@
 Download and setup the osic-prep LXC container
 ==============================================
 
-SSH to your deployment host once it has been provisioned.
-
-Download a pre-packaged LXC container that contains Cobbler. Cobbler will
-be the main tool you use to PXE boot the rest of your servers.
-
-Cobbler overview
-~~~~~~~~~~~~~~~~
-
 There are numerous tools that can help you PXE boot your servers. We
 recommend the use of `Cobbler <http://cobbler.github.io/>`_ as it is powerful,
 easy to use, and is quick to set up network installation environments.
 Cobbler is a Linux based provisioning system which configures network installations
-from MAC addresses, manages DNS, and serves DHCP requests, to name a few functions.
+from MAC addresses, manages DNS, and serves DHCP requests.
+
+The following steps take you through the download of a pre-packaged LXC container
+that contains Cobbler. Cobbler is the main tool you use to PXE boot the rest of
+your servers.
+
+SSH to your deployment host once it has been provisioned.
 
 Setup LXC Linux bridge
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -26,11 +24,7 @@ Setup LXC Linux bridge
       apt-get install vlan bridge-utils
 
 #. Reconfigure the network interface file ``/etc/network/interfaces`` to
-   match the following:
-
-   .. note::
-
-      Your IP addresses and ports will most likely be different.
+   match the following. Your IP addresses and ports will differ.
 
    .. code:: ini
 
@@ -53,17 +47,18 @@ Setup LXC Linux bridge
       bridge_waitport 0
       bridge_fd 0
 
-#. Bring up ``br-pxe``. We recommend you have access to the iLO in case the
+#. Bring up the ``br-pxe`` interface. We recommend you have access to the iLO in case the
    following commands fail and you lose network connectivity:
 
    .. code::
 
-      ifdown p1p1; ifup br-pxe
+      ifdown p1p1
+      ifup br-pxe
 
 Install LXC and configure LXC container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#. Install the necessary LXC package:
+#. Install LXC:
 
    .. code:: console
 
@@ -80,6 +75,7 @@ Install LXC and configure LXC container
    .. code:: console
 
       wget http://23.253.105.87/osic.tar.gz
+   
 
 #. Untar the LXC container:
 
@@ -87,7 +83,7 @@ Install LXC and configure LXC container
 
       tar xvzf /root/osic.tar.gz
 
-#. Move the LXC container directory into the proper directory:
+#. Move the LXC container directory into the right directory:
 
    .. code:: console
 
@@ -173,5 +169,4 @@ pre-packaged LXC container for it to function on your network.
 
       cobbler sync
 
-You can now manually PXE boot any servers. In order for it to be an automated
-process, you need to create a CSV file.
+You can now manually PXE boot any servers.

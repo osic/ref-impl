@@ -2,14 +2,11 @@
 PXE boot the servers
 ====================
 
-Gather MAC addresses
-~~~~~~~~~~~~~~~~~~~~
-
 In order to PXE boot your servers, you need to obtain the MAC address of the
 network interface (For example, **p1p1**) that is configured to PXE boot on every
 server. The MAC addresses must be mapped to their respective hostname.
 
-#. Go to root home directory
+#. Go to root home directory:
 
    .. code:: console
 
@@ -24,7 +21,7 @@ server. The MAC addresses must be mapped to their respective hostname.
       swift). Ensure hostnames are meaningful to you, For example, `controller01`,
       and `controller02`.
 
-#. Use the information from your onboarding email to create the CSV.
+#. Use the information from your novice install email to create the CSV.
    We recommend that you specify three hosts as your controllers and
    at least three swift nodes if you decide to deploy swift as well.
 
