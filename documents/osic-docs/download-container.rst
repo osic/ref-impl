@@ -52,8 +52,7 @@ Setup LXC Linux bridge
 
    .. code::
 
-      ifdown p1p1
-      ifup br-pxe
+      ifdown p1p1; ifup br-pxe
 
 Install LXC and configure LXC container
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

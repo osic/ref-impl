@@ -48,7 +48,7 @@ Manually provision the deployment host
       version 1.3.47 and HP iLO tools.
 
 #. Boot the deployment host to this ISO using a USB drive, CD/DVD-ROM,
-   iDRAC, or iLO.
+   or iLO.
    The following steps detail how to boot the deployment host
    with the iLO:
    
