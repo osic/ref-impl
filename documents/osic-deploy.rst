@@ -144,7 +144,7 @@ prompts:
 
    When configuring your preferences, the DHCP detection will fail.
    You will need to manually select the proper network interface, ``p1p1``. 
-   This manually configures networking on the **PXE** network. You will need to 
+   Manually configure a free ip from the **PXE** network. You will need to 
    refer to your novice install email to find the **PXE** network information.
 
    #. At the prompt for name servers, insert: `8.8.8.8 8.8.4.4`.
