@@ -232,7 +232,7 @@ Setup LXC Linux bridge
 #. Bring up the ``br-pxe`` interface. We recommend you have access to the iLO in case the
    following commands fail and you lose network connectivity:
 
-   .. code::
+   .. code:: console
 
       ifdown p1p1; ifup br-pxe
 
@@ -331,7 +331,7 @@ pre-packaged LXC container for it to function on your network.
    Change the `subnet`, `netmask`, `option routers`, `option subnet-mask`,
    and `range dynamic-bootp` parameters to match your network:
 
-   .. code::
+   .. code:: ini
 
       subnet 172.22.0.0 netmask 255.255.252.0 {
            option routers             172.22.0.1;
@@ -344,7 +344,7 @@ pre-packaged LXC container for it to function on your network.
 
 #. Restart Cobbler and sync it:
 
-   .. code::
+   .. code:: console
 
       service cobbler restart
 
@@ -362,7 +362,7 @@ server. The MAC addresses must be mapped to their respective hostname.
 #. Before you begin PXE booting your servers, we recommend running the following
    command to list all processes to ensure DHCP is running:
   
-    .. code::
+    .. code:: console
       
        ps axww
 
@@ -423,7 +423,7 @@ Create input CSV
 
 The following script creates a CSV named ``input.csv`` in this format:
 
-   .. code::
+   .. code:: ini
 
       hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
 
@@ -451,7 +451,7 @@ setup rest of information as well as shown above.
 #. Make sure you have installed ssh-pass before you run the following script.
    If you do not have ssh-pass installed, run:
    
-   .. code::
+   .. code:: console
       
       install ssh-pass
 
@@ -551,13 +551,13 @@ The ``generate_cobbler_systems.py`` script generates a list of
 
 #. Verify the `cobbler system` entries were added. Run:
 
-   .. code::
+   .. code:: console
 
       cobbler system list
 
 #. Once all of the `cobbler systems` are setup, run the following command:
 
-   .. code::
+   .. code:: console
 
       cobbler sync
 
@@ -569,7 +569,7 @@ Begin PXE booting
    controller, you will want to remove it from the ``ilo.csv`` file so you do not
    reboot the host running the LXC container):
 
-   .. code::
+   .. code:: ini
 
       for i in $(cat /root/ilo.csv)
       do
@@ -591,7 +591,7 @@ does not PXE boot again.
 
 #. Run the following command to see which servers are still set to PXE boot:
 
-   .. code::
+   .. code:: ini
 
       for i in $(cobbler system list)
       do
@@ -616,7 +616,7 @@ does not PXE boot again.
       To re-pxeboot servers, make sure to clean old
       settings from cobbler with the following command:
 
-      .. code::
+      .. code:: ini
 
          for i in `cobbler system list`; do cobbler system remove --name $i; done;
          
@@ -641,7 +641,7 @@ Generate Ansible inventory
    Ansible hosts file into groups for controller, logging, compute, cinder, and
    swift. For example:
 
-   .. code::
+   .. code:: ini
 
       [controller]
       744800-infra01.example.com ansible_ssh_host=10.240.0.51
@@ -673,7 +673,7 @@ create a silent login when SSHing to servers.
 #. Add the SSH fingerprints to ``known_hosts`` by running the following
    bash script:
 
-   .. code::
+   .. code:: ini
 
       for i in $(cat /root/osic-prep-ansible/hosts | awk /ansible_ssh_host/ | cut -d'=' -f2)
       do
@@ -728,13 +728,13 @@ the following steps.
 #. Remove LVM logical volume ``nova00`` from the controller, logging,
    cinder, and swift nodes:
 
-   .. code::
+   .. code:: console
 
       ansible-playbook -i hosts playbooks/remove-lvs-nova00.yml
 
 #. Remove LVM Logical Volume ``deleteme00`` from all nodes:
 
-   .. code::
+   .. code:: console
 
       ansible-playbook -i hosts playbooks/remove-lvs-deleteme00.yml
 
@@ -764,7 +764,7 @@ Reboot nodes
 
 Reboot all servers:
 
-.. code::
+.. code:: console
 
    ansible -i hosts all -m shell -a "reboot" --forks 25
 
