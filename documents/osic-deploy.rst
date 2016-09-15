@@ -8,8 +8,8 @@ Overview
 The scenario for the following document assumes you have a number
 of bare metal servers and want to build your own cloud on top of them.
 
-We recommend provisioning your bare metal servers with an
-operating system (OS), we recommend a Linux OS if you later
+The following document provisions your bare metal servers with your
+chosen operating system (OS). We recommend a Linux OS if you later
 want to use an Open Source platform to build your cloud.
 
 In a production deployment, the process of deploying all
@@ -18,7 +18,6 @@ servers. The host will become your deployment host and will be
 used later to provision the rest of your servers
 by booting them over the network. This is called
 `PXE Booting <https://en.wikipedia.org/wiki/Preboot_Execution_Environment>`_.
-
 
 Provisioning the deployment host
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -122,7 +121,7 @@ begin installation:
    .. note::
       
       Depending on your keyboard configuration, ensure that you have
-      the `Fx` keys enabled as standard function keys.
+      the `Fn` keys enabled as standard function keys.
 
 #. Dismiss the ``Expert mode`` menu by hitting the `Esc` key.
 
@@ -162,8 +161,12 @@ prompt appears.
 Update Linux kernel
 -------------------
 
-#. Once the system boots, SSH into it to using the IP address you
-   manually assigned.
+#. Once the system boots, open a terminal in your computer and SSH into it to using the
+   IP address you manually assigned.
+   
+   .. note::
+      
+      From this point you do not need the iLO remote console.
 
 #. Login with username ``root`` and password ``cobbler``.
 
@@ -175,8 +178,7 @@ Update Linux kernel
       apt-get update
       apt-get install -y linux-generic-lts-xenial
 
-#. After the update finishes, click ``Power Switch`` and select ``Reset``
-   to reboot the server.
+#. After the update finishes, ``reboot`` the server.
 
 
 Download and setup the osic-prep LXC container
@@ -357,6 +359,13 @@ In order to PXE boot your servers, you need to obtain the MAC address of the
 network interface (For example, **p1p1**) that is configured to PXE boot on every
 server. The MAC addresses must be mapped to their respective hostname.
 
+#. Before you begin PXE booting your servers, we recommend running the following
+   command to list all processes to ensure DHCP is running:
+  
+    .. code::
+      
+       ps axww
+
 #. Go to root home directory:
 
    .. code:: console
@@ -367,7 +376,7 @@ server. The MAC addresses must be mapped to their respective hostname.
 
    .. note::
       
-      Each line should have a hostname to assign for the server, its ILO IP
+      Each line should have a hostname to assign for the server, its iLO IP
       address, type of node it will be (controller, logging, compute, cinder,
       swift). Ensure hostnames are meaningful to you, For example, `controller01`,
       and `controller02`.
@@ -412,23 +421,15 @@ process.
 Create input CSV
 ----------------
 
-#. Use the following script to create a CSV named ``input.csv`` in the
-   following format:
+The following script creates a CSV named ``input.csv`` in this format:
 
    .. code::
 
       hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
 
-#. (Optional) If this will be an OpenStack-Ansible installation, we recommend
-   ordering the rows in the CSV file in the following order:
-
-   #. Controller nodes
-   #. Logging nodes
-   #. Compute nodes
-   #. Cinder nodes
-   #. Swift nodes
-
-   An OpenStack-Ansible example installation:
+If you will be deploying OpenStack-Ansible installation, we recommend
+ordering the CSV file as controller, logging, compute, cinder, and
+swift. For example:
 
    .. code:: ini
 
@@ -443,53 +444,59 @@ Create input CSV
       744826-object02.example.com,A0:36:9F:7F:6A:C2,172.22.0.31,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
       744827-object03.example.com,A0:36:9F:82:8C:E3,172.22.0.32,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,ubuntu-14.04.3-server-unattended-osic-swift
 
-The following script loops through each iLO IP address in ``ilo.csv`` to
+The script loops through each iLO IP address in ``ilo.csv`` to
 obtain the MAC address of the network interface configured to PXE boot and
 setup rest of information as well as shown above.
 
-.. note::
+#. Make sure you have installed ssh-pass before you run the following script.
+   If you do not have ssh-pass installed, run:
+   
+   .. code::
+      
+      install ssh-pass
 
-   Make sure to set `COUNT` to the first usable address after
-   deployment host and container. For example, if you use .2 and .3 for
-   deployment and container, start with .4 controller1. 
-   Make sure to change ``host-ip,host-netmask,host-gateway`` in the script
-   (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE network
-   configurations. If you later discover that you have configured the wrong
-   IPs here, you need to restart from this point.
+#. Run the following script in your local console: 
 
-.. code:: ini
+   .. note::
 
-    COUNT=23
-    for i in $(cat ilo.csv)
-    do
-        NAME=`echo $i | cut -d',' -f1`
-        IP=`echo $i | cut -d',' -f2`
-        TYPE=`echo $i | cut -d',' -f3`
+      Make sure to set `COUNT` to the first usable address after
+      deployment host and container. For example, if you use .2 and .3 for
+      deployment and container, start with .4 controller1. 
+      Make sure to change ``host-ip,host-netmask,host-gateway`` in the script
+     (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE network
+     configurations. If you later discover that you have configured the wrong
+     IPs here, you need to restart from this point.
 
-        case "$TYPE" in
-          cinder)
-                SEED='ubuntu-14.04.3-server-unattended-osic-cinder'
-                ;;
-            swift)
-                SEED='ubuntu-14.04.3-server-unattended-osic-swift'
-                ;;
-            *)
-            SEED='ubuntu-14.04.3-server-unattended-osic-generic'
-                ;;
-        esac
-        MAC=`sshpass -p calvincalvin ssh -o StrictHostKeyChecking=no root@$IP show /system1/network1/Integrated_NICs | grep Port1 | cut -d'=' -f2`
-        #hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
-        echo "$NAME,${MAC//[$'\t\r\n ']},172.22.0.$COUNT,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,$SEED" | tee -a input.csv
+   .. code:: ini
 
-        (( COUNT++ ))
-    done
+       COUNT=23
+       for i in $(cat ilo.csv)
+       do
+           NAME=`echo $i | cut -d',' -f1`
+           IP=`echo $i | cut -d',' -f2`
+           TYPE=`echo $i | cut -d',' -f3`
 
-.. important::
-  
-   Before continuing, make sure the generated script
-   ``input.csv`` has all the information as shown previously. If you
-   run into some missing information, you may need to paste the above
-   command in a bash script and execute it.
+           case "$TYPE" in
+             cinder)
+                   SEED='ubuntu-14.04.3-server-unattended-osic-cinder'
+                   ;;
+               swift)
+                   SEED='ubuntu-14.04.3-server-unattended-osic-swift'
+                   ;;
+               *)
+               SEED='ubuntu-14.04.3-server-unattended-osic-generic'
+                   ;;
+           esac
+           MAC=`sshpass -p calvincalvin ssh -o StrictHostKeyChecking=no root@$IP show /system1/network1/Integrated_NICs | grep Port1 | cut -d'=' -f2`
+           #hostname,mac-address,host-ip,host-netmask,host-gateway,dns,pxe-interface,cobbler-profile
+           echo "$NAME,${MAC//[$'\t\r\n ']},172.22.0.$COUNT,255.255.252.0,172.22.0.1,8.8.8.8,p1p1,$SEED" | tee -a input.csv
+
+           (( COUNT++ ))
+       done
+
+#. Make sure the generated script ``input.csv`` has all the information as
+   shown in the above example. If you run into some missing information, you
+   may need to paste the above command in a bash script and execute it.
 
 Assigning a Cobbler profile
 ---------------------------
@@ -497,22 +504,22 @@ Assigning a Cobbler profile
 The last column in the CSV file specifies which Cobbler profile to map
 the Cobbler system to. You have the following options:
 
-* ubuntu-14.04.3-server-unattended-osic-generic
+* `ubuntu-14.04.3-server-unattended-osic-generic`
 
   Typically, you will use the `ubuntu-14.04.3-server-unattended-osic-generic`
   Cobbler profile. It creates one RAID10 raid group. The operating system will
   see this as ``/dev/sda``.
   
-* ubuntu-14.04.3-server-unattended-osic-generic-ssd
-* ubuntu-14.04.3-server-unattended-osic-cinder
+* `ubuntu-14.04.3-server-unattended-osic-generic-ssd`
+* `ubuntu-14.04.3-server-unattended-osic-cinder`
 
   The `ubuntu-14.04.3-server-unattended-osic-cinder` Cobbler profile
   creates one RAID1 raid group and a second RAID10 raid group. These
   will be seen by the operating system as ``/dev/sda`` and ``/dev/sdb``,
   respectively.
   
-* ubuntu-14.04.3-server-unattended-osic-cinder-ssd
-* ubuntu-14.04.3-server-unattended-osic-swift
+* `ubuntu-14.04.3-server-unattended-osic-cinder-ssd`
+* `ubuntu-14.04.3-server-unattended-osic-swift`
   
   The `ubuntu-14.04.3-server-unattended-osic-swift` Cobbler profile
   creates one RAID1 raid group and 10 RAID0 raid groups each containing one
@@ -521,7 +528,7 @@ the Cobbler system to. You have the following options:
   individual, non-RAIDed disks, the only way to do this is to put each
   disk in its own RAID0 raid group.
   
-* ubuntu-14.04.3-server-unattended-osic-swift-ssd
+* `ubuntu-14.04.3-server-unattended-osic-swift-ssd`
 
 .. important::
 
@@ -530,10 +537,10 @@ the Cobbler system to. You have the following options:
 Generate Cobbler systems
 ------------------------
 
-The ``generate_cobbler_systems.py`` script will generate a list of
+The ``generate_cobbler_systems.py`` script generates a list of
 `cobbler system` commands to the standard output.
 
-#. If you pipe the standard output to ``bash``, all the servers will be
+#. Pipe the standard output to ``bash``. The servers will be
    added to Cobbler (internally done by issuing a cobbler system command):
 
    .. code:: console
@@ -542,8 +549,11 @@ The ``generate_cobbler_systems.py`` script will generate a list of
 
       python generate_cobbler_system.py /root/input.csv | bash
 
-#. Verify the `cobbler system` entries were added by running
-   ``cobbler system list``.
+#. Verify the `cobbler system` entries were added. Run:
+
+   .. code::
+
+      cobbler system list
 
 #. Once all of the `cobbler systems` are setup, run the following command:
 
@@ -591,17 +601,19 @@ does not PXE boot again.
       fi
       done
 
-   Any server which returns ``True`` has not yet PXE booted. Rerun last
+   Any server that returns ``True`` has not yet PXE booted. Rerun last
    command until there is no output to make sure all your servers has
-   finished pxebooting. Time to wait depends on the number of servers you
-   are deploying. If somehow, one or two servers did not go through for a
-   long time, you may want to investigate them with their ILO console. In
+   finished pxebooting.
+   
+   Time to wait depends on the number of servers you are deploying. If
+   somehow, one or two servers did not go through for a
+   long time, you may want to investigate them with their iLO console. In
    most cases, this is due to rebooting those servers either fails or
-   hangs, so you may need to reboot them manually with ILO.
+   hangs, so you may need to reboot them manually with iLO.
 
    .. note::
 
-      In case you want to re-pxeboot servers, make sure to clean old
+      To re-pxeboot servers, make sure to clean old
       settings from cobbler with the following command:
 
       .. code::
@@ -627,9 +639,7 @@ Generate Ansible inventory
 
 #. (Optional) If this will be an OpenStack-Ansible installation, organize the
    Ansible hosts file into groups for controller, logging, compute, cinder, and
-   swift:
-
-   An example OpenStack-Ansible installation:
+   swift. For example:
 
    .. code::
 
@@ -661,7 +671,7 @@ in the ``known_hosts`` file. This is needed to bypass prompts and
 create a silent login when SSHing to servers.
 
 #. Add the SSH fingerprints to ``known_hosts`` by running the following
-   command:
+   bash script:
 
    .. code::
 
