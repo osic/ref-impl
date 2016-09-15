@@ -565,9 +565,10 @@ Begin PXE booting
 -----------------
 
 #. Set the servers to boot from PXE on the next reboot and reboot all of the
-   servers with the following command (if the deployment host is the first
-   controller, you will want to remove it from the ``ilo.csv`` file so you do not
-   reboot the host running the LXC container):
+   servers with the following command (if the deployment host is in ``ilo.csv``,
+   you will want to remove it from the file so you do not
+   reboot the host running the LXC container). Change ``USERNAME`` and ``PASSWORD``
+   to your servers iLO credentials before running the command:
 
    .. code:: ini
 
@@ -637,7 +638,7 @@ Generate Ansible inventory
 
       python generate_ansible_hosts.py /root/input.csv > /root/osic-prep-ansible/hosts
 
-#. (Optional) If this will be an OpenStack-Ansible installation, organize the
+#. (Optional) If this will be an OpenStack installation, organize the
    Ansible hosts file into groups for controller, logging, compute, cinder, and
    swift. For example:
 
@@ -719,8 +720,7 @@ Bootstrap the servers
 Clean up LVM logical volumes
 ----------------------------
 
-(Optional) If this will be an OpenStack-Ansible installation, you will need to
-clean up particular LVM Logical Volumes.
+you will need to clean up particular LVM Logical Volumes.
 Each server is provisioned with a standard set of LVM Logical Volumes.
 Not all servers need all of the LVM Logical Volumes. Clean them up with
 the following steps.
