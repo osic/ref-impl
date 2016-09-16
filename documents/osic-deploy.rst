@@ -144,7 +144,7 @@ prompts:
 
    When configuring your preferences, the DHCP detection will fail.
    You will need to manually select the proper network interface, ``p1p1``. 
-   Manually configure a free ip from the **PXE** network. You will need to 
+   Manually configure a free IP from the **PXE** network. You will need to 
    refer to your novice install email to find the **PXE** network information.
 
    #. At the prompt for name servers, insert: `8.8.8.8 8.8.4.4`.
@@ -564,11 +564,12 @@ The ``generate_cobbler_systems.py`` script generates a list of
 Begin PXE booting
 -----------------
 
-#. Set the servers to boot from PXE on the next reboot and reboot all of the
+#. Set the servers to boot from PXE on the next reboot. Reboot all of the
    servers with the following command (if the deployment host is in ``ilo.csv``,
    you will want to remove it from the file so you do not
-   reboot the host running the LXC container). Change ``USERNAME`` and ``PASSWORD``
-   to your servers iLO credentials before running the command:
+   reboot the host running the LXC container).
+   Make sure you change ``USERNAME`` and ``PASSWORD``
+   to your server's iLO credentials before running the command:
 
    .. code:: ini
 
@@ -720,9 +721,8 @@ Bootstrap the servers
 Clean up LVM logical volumes
 ----------------------------
 
-you will need to clean up particular LVM Logical Volumes.
-Each server is provisioned with a standard set of LVM Logical Volumes.
-Not all servers need all of the LVM Logical Volumes. Clean them up with
+Each server is provisioned with a standard set of LVM Logical Volumes and
+not all servers need all of the LVM Logical Volumes. Clean them up with
 the following steps.
 
 #. Remove LVM logical volume ``nova00`` from the controller, logging,
