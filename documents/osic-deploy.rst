@@ -797,29 +797,29 @@ Please use the iLO IP addresses, and not the hostnames, to access the servers vi
 
    .. code:: ini
 
-   [M8-11]
-   729429-comp-disk-067.cloud2.osic.rackspace.com 10.15.243.160
-   729428-comp-disk-068.cloud2.osic.rackspace.com 10.15.243.159
-   729427-comp-disk-069.cloud2.osic.rackspace.com 10.15.243.158
-   729426-comp-disk-070.cloud2.osic.rackspace.com 10.15.243.157
-   729425-comp-disk-071.cloud2.osic.rackspace.com 10.15.243.156
-   729424-comp-disk-072.cloud2.osic.rackspace.com 10.15.243.155
-   729423-comp-disk-073.cloud2.osic.rackspace.com 10.15.243.154
-   729422-comp-disk-074.cloud2.osic.rackspace.com 10.15.243.153
-   729421-comp-disk-075.cloud2.osic.rackspace.com 10.15.243.152
-   729420-comp-disk-076.cloud2.osic.rackspace.com 10.15.243.151
-   729419-comp-disk-077.cloud2.osic.rackspace.com 10.15.243.150
-   729418-comp-disk-078.cloud2.osic.rackspace.com 10.15.243.149
-   729417-comp-disk-079.cloud2.osic.rackspace.com 10.15.243.148
-   729416-comp-disk-080.cloud2.osic.rackspace.com 10.15.243.147
-   729415-comp-disk-081.cloud2.osic.rackspace.com 10.15.243.146
-   729414-comp-disk-082.cloud2.osic.rackspace.com 10.15.243.145
-   729413-comp-disk-083.cloud2.osic.rackspace.com 10.15.243.144
-   729412-comp-disk-084.cloud2.osic.rackspace.com 10.15.243.143
-   729411-comp-disk-085.cloud2.osic.rackspace.com 10.15.243.142
-   729410-comp-disk-086.cloud2.osic.rackspace.com 10.15.243.141
-   729409-comp-disk-087.cloud2.osic.rackspace.com 10.15.243.140
-   729408-comp-disk-088.cloud2.osic.rackspace.com 10.15.243.139
+      [M8-11]
+      729429-comp-disk-067.cloud2.osic.rackspace.com 10.15.243.160
+      729428-comp-disk-068.cloud2.osic.rackspace.com 10.15.243.159
+      729427-comp-disk-069.cloud2.osic.rackspace.com 10.15.243.158
+      729426-comp-disk-070.cloud2.osic.rackspace.com 10.15.243.157
+      729425-comp-disk-071.cloud2.osic.rackspace.com 10.15.243.156
+      729424-comp-disk-072.cloud2.osic.rackspace.com 10.15.243.155
+      729423-comp-disk-073.cloud2.osic.rackspace.com 10.15.243.154
+      729422-comp-disk-074.cloud2.osic.rackspace.com 10.15.243.153
+      729421-comp-disk-075.cloud2.osic.rackspace.com 10.15.243.152
+      729420-comp-disk-076.cloud2.osic.rackspace.com 10.15.243.151
+      729419-comp-disk-077.cloud2.osic.rackspace.com 10.15.243.150
+      729418-comp-disk-078.cloud2.osic.rackspace.com 10.15.243.149
+      729417-comp-disk-079.cloud2.osic.rackspace.com 10.15.243.148
+      729416-comp-disk-080.cloud2.osic.rackspace.com 10.15.243.147
+      729415-comp-disk-081.cloud2.osic.rackspace.com 10.15.243.146
+      729414-comp-disk-082.cloud2.osic.rackspace.com 10.15.243.145
+      729413-comp-disk-083.cloud2.osic.rackspace.com 10.15.243.144
+      729412-comp-disk-084.cloud2.osic.rackspace.com 10.15.243.143
+      729411-comp-disk-085.cloud2.osic.rackspace.com 10.15.243.142
+      729410-comp-disk-086.cloud2.osic.rackspace.com 10.15.243.141
+      729409-comp-disk-087.cloud2.osic.rackspace.com 10.15.243.140
+      729408-comp-disk-088.cloud2.osic.rackspace.com 10.15.243.139
 
 
 Each server has the following specs:
