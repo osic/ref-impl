@@ -33,20 +33,6 @@ network interface and is commonly used for:
 * Request an Integrated Remote Console for the server
 * Monitor server health
 
-Accessing the OSIC Servers
---------------------------
-
-To access the OSIC servers, you must be connected to the OSIC VPN.
-To do that, disconnect from any other VPN (corporate) you are connected
-to, then you are required to install an F5's SSL VPN. The SSL VPN is a
-browser plugin.
-
-See the novice install email for information on how to connect to the OSIC VPN.
-
-.. note::
-
-   The Chrome web browser does not support automatic plugin installation.
-   We recommend using Firefox, or Safari for Mac.
    
 Manually provision the deployment host
 --------------------------------------
@@ -770,3 +756,108 @@ Reboot all servers:
 
 Once all servers reboot, you can begin installing
 `OpenStack-Ansible <http://docs.openstack.org/developer/openstack-ansible/install-guide/index.html>`_.
+
+Appendix
+~~~~~~~~
+
+Novice install email
+----------------------
+
+:Login details:
+     OSIC VPN
+         Username: osic
+
+         VPN pass: *********
+     iLO
+         Username: root
+
+         Password: *********
+
+**User details:**
+
+1. Accessing the OSIC Servers
+
+To access the OSIC servers, you must be connected to the OSIC VPN. To do that, disconnect 
+from any other VPN (corporate) you are connected to, then you are required to install an F5's SSL VPN. 
+The SSL VPN is a browser plugin.
+The Chrome web browser does not support automatic plugin installation. 
+We recommend using Firefox, or Safari for Mac.
+
+2. OSIC VPN
+
+Open https://72.3.183.39 in your browser and follow the instructions. At this time, the VPN endpoint uses a 
+self-signed SSL certificate, so you may need to bypass a security warning in your browser, however the traffic is encrypted.
+You are connected to the OSIC VPN as long as you have the browser up and logged in to the URL.
+
+3. Servers
+
+The following 12 servers have been allocated to you. The server hostnames 
+(as we identify them in our internal systems) are below as well as the iLO IP address for each server. 
+Please use the iLO IP addresses, and not the hostnames, to access the servers via iLO.
+
+   .. code:: ini
+
+   [M8-11]
+   729429-comp-disk-067.cloud2.osic.rackspace.com 10.15.243.160
+   729428-comp-disk-068.cloud2.osic.rackspace.com 10.15.243.159
+   729427-comp-disk-069.cloud2.osic.rackspace.com 10.15.243.158
+   729426-comp-disk-070.cloud2.osic.rackspace.com 10.15.243.157
+   729425-comp-disk-071.cloud2.osic.rackspace.com 10.15.243.156
+   729424-comp-disk-072.cloud2.osic.rackspace.com 10.15.243.155
+   729423-comp-disk-073.cloud2.osic.rackspace.com 10.15.243.154
+   729422-comp-disk-074.cloud2.osic.rackspace.com 10.15.243.153
+   729421-comp-disk-075.cloud2.osic.rackspace.com 10.15.243.152
+   729420-comp-disk-076.cloud2.osic.rackspace.com 10.15.243.151
+   729419-comp-disk-077.cloud2.osic.rackspace.com 10.15.243.150
+   729418-comp-disk-078.cloud2.osic.rackspace.com 10.15.243.149
+   729417-comp-disk-079.cloud2.osic.rackspace.com 10.15.243.148
+   729416-comp-disk-080.cloud2.osic.rackspace.com 10.15.243.147
+   729415-comp-disk-081.cloud2.osic.rackspace.com 10.15.243.146
+   729414-comp-disk-082.cloud2.osic.rackspace.com 10.15.243.145
+   729413-comp-disk-083.cloud2.osic.rackspace.com 10.15.243.144
+   729412-comp-disk-084.cloud2.osic.rackspace.com 10.15.243.143
+   729411-comp-disk-085.cloud2.osic.rackspace.com 10.15.243.142
+   729410-comp-disk-086.cloud2.osic.rackspace.com 10.15.243.141
+   729409-comp-disk-087.cloud2.osic.rackspace.com 10.15.243.140
+   729408-comp-disk-088.cloud2.osic.rackspace.com 10.15.243.139
+
+
+Each server has the following specs:
+
+:Model: HP DL380 Gen9
+:Processor: 2x 12-core Intel E5-2680 v3 @ 2.50GHz
+:RAM: 256GB RAM
+:Disk: 12x 600GB 15K SAS - RAID10
+:NICS: 2x Intel X710 Dual Port 10 GbE
+
+All servers contain two Intel X710 10 GbE NICs. This is a relatively new NIC that has caused us a lot 
+of problems during the setup of the OSIC environment. If you will be installing Ubuntu Server 14.04 
+on these servers, I highly recommend you use an i40e driver no older than 1.3.47.
+
+4. Server cabling and switch port configuration
+
+Use available subnets on your need while excluding specified reserved ip addresses for each subnet. 
+The switchport networking has been configured in a way that allows you to PXE boot from p1p1 or p4p1. 
+Pick one of those network interfaces to PXE boot from for every server.
+
+** Subnets to be used (first 20 ip’s on each subnet are reserved, please start on .21): **
+
+======   ============================= ===============
+ VLAN     SUBNET                        GATEWAY       
+======   ============================= ===============
+ 810     172.22.4.0/22 - PXE            172.22.4.1    
+ 812     172.22.12.0/22 - MANAGEMENT    172.22.12.1   
+ 840     172.22.140.0/22 - STORAGE      172.22.140.1  
+ 841     172.22.144.0/22 - OVERLAY      172.22.144.1  
+ 842     172.22.148.0/22 - FLAT         172.22.148.1 
+======   ============================= ===============
+
+5. Troubleshooting iLO connectivity
+
+If  you lose connectivity to the server(s) iLO, try to reset it using the following ipmitool command:
+
+.. code:: console
+
+   ipmitool -I lanplus -U root -p calvincalvin -H <iLO IP> mc reset warm
+
+If you still have connectivity problems, please submit open a ticket with Rackspace identifying the problematic servers.
