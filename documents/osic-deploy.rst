@@ -755,7 +755,7 @@ Reboot all servers:
    ansible -i hosts all -m shell -a "reboot" --forks 25
 
 Once all servers reboot, you can begin installing
-`OpenStack-Ansible <http://docs.openstack.org/developer/openstack-ansible/install-guide/index.html>`_.
+`OpenStack-Ansible <https://github.com/osic/ref-impl/blob/master/documents/osa-refimpl-deploy.md>`_.
 
 Appendix
 ~~~~~~~~
