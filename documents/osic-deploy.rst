@@ -873,5 +873,6 @@ Novice install email
 
       ipmitool -I lanplus -U root -p password -H <iLO IP> mc reset warm
 
-   If you still have connectivity problems, submit open a ticket with Rackspace
+   If you still have connectivity problems, submit open a ticket with the
+   `OSIC <https://github.com/osic/osic-clouds/issues>`_ team
    identifying the problematic servers.
