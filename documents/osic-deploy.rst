@@ -449,10 +449,10 @@ setup rest of information as well as shown above.
       deployment host and container. For example, if you use .2 and .3 for
       deployment and container, start with .4 controller1. Update password to match
       your iLo password.
-      Make sure to change ``host-ip,host-netmask,host-gateway`` in the script
-     (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE network
-     configurations. If you later discover that you have configured the wrong
-     IPs here, you need to restart from this point.
+      Make sure to change ``host-ip,host-netmask,host-gateway`` in the script 
+      (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE network
+      configurations. If you later discover that you have configured the wrong
+      IPs here, you need to restart from this point.
 
    .. code:: ini
 
