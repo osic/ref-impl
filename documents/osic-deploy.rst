@@ -350,7 +350,7 @@ server. The MAC addresses must be mapped to their respective hostname.
   
     .. code:: console
       
-       ps axww
+       ps aux | grep dhcp
 
 #. Go to root home directory:
 
@@ -434,12 +434,6 @@ The script loops through each iLO IP address in ``ilo.csv`` to
 obtain the MAC address of the network interface configured to PXE boot and
 setup rest of information as well as shown above.
 
-#. Make sure you have installed ssh-pass before you run the following script.
-   If you do not have ssh-pass installed, run:
-   
-   .. code:: console
-      
-      install ssh-pass
 
 #. Run the following script in your local console: 
 
