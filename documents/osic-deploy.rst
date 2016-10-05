@@ -73,6 +73,11 @@ Manually provision the deployment host
       #. Select the relevant iLO IP from right panel. The default is selected to `Allow`,
          change it by selecting `Run in unsafe mode`.
       #. Save and close.
+      
+      .. note::
+
+      This process may differ depending on the version of Safari running on your local
+      machine. Safari 10 users hold the `option` key when changing the default settings.
                                                                         
    #. Select ``Remote Console`` from the left panel in the GUI.
    
@@ -94,12 +99,12 @@ Manually provision the deployment host
    #. Click ``Power Switch`` and select ``Reset`` to reboot the
       host from the image.
 
-   #. Unselect ``Image File CD/DVD-ROM`` from the ``Virtual Drives`` tab.
-      This ensures future server reboots do not continue to use it to boot.
-
 Once the deployment host is booted to the ISO, follow these steps to
 begin installation:
 
+#. Unselect ``Image File CD/DVD-ROM`` from the ``Virtual Drives`` tab.
+   This ensures future server reboots do not continue to use it to boot.
+   
 #. Select the `Language` you want to boot in, press `Enter`.
 
 #. Hit `Fn` and `F6`.
