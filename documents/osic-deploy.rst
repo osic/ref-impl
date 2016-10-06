@@ -444,7 +444,7 @@ setup rest of information as well as shown above.
    Restart from this point if your IP addresses were incorrectly
    configured.
 
-#.    Edit the following script and run it in your local console:
+#. Edit the following script and run it in your local console:
 
       * Set `COUNT` to the first usable address after deployment host and
         container. For example, if you use .2 and .3 for deployment and
