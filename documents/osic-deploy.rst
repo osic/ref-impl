@@ -77,7 +77,7 @@ Manually provision the deployment host
       .. note::
 
       This process may differ depending on the version of Safari running on your local
-      machine. Safari 10 users hold the `option` key when changing the default settings.
+      machine. Safari 10 users hold the ``option`` key when changing the default settings.
                                                                         
    #. Select ``Remote Console`` from the left panel in the GUI.
    
@@ -439,20 +439,21 @@ The script loops through each iLO IP address in ``ilo.csv`` to
 obtain the MAC address of the network interface configured to PXE boot and
 setup rest of information as well as shown above.
 
+.. important::
+   
+   Restart from this point if your IP addresses were incorrectly
+   configured.
 
-#. Run the following script in your local console: 
+#.    Edit the following script and run it in your local console:
 
-   .. note::
-
-      Make sure to set `COUNT` to the first usable address after
-      deployment host and container. For example, if you use .2 and .3 for
-      deployment and container, start with .4 controller1. Update password to match
-      your iLo password.
-      Make sure to change ``host-ip,host-netmask,host-gateway`` in the script 
-      (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE network
-      configurations. If you later discover that you have configured the wrong
-      IPs here, you need to restart from this point.
-
+      * Set `COUNT` to the first usable address after deployment host and
+        container. For example, if you use .2 and .3 for deployment and
+        container, start with .4 controller1. Update password to match
+        your iLo password.
+      * Change ``host-ip,host-netmask,host-gateway`` in the
+        script (172.22.0.$COUNT,255.255.252.0,172.22.0.1) to match your PXE
+        network configurations.
+        
    .. code:: ini
 
        COUNT=23
