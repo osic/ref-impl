@@ -76,8 +76,9 @@ Manually provision the deployment host
       
       .. note::
 
-      This process may differ depending on the version of Safari running on your local
-      machine. Safari 10 users hold the ``option`` key when changing the default settings.
+         This process may differ depending on the version of Safari running on
+         your local machine. Safari 10 users must hold the ``option`` key when
+         changing the default settings.
                                                                         
    #. Select ``Remote Console`` from the left panel in the GUI.
    
