@@ -1,0 +1,7 @@
+DEVICE=br-storage
+TYPE=Bridge
+IPADDR={{ storage_network.split('.')[0:2] | join('.') }}.{{ storage_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+NETMASK={{ storage_netmask }}
+ONBOOT=yes
+NM_CONTROLLED=no
+DELAY=0

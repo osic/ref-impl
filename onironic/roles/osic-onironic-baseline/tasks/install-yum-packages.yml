@@ -1,0 +1,7 @@
+---
+- name: Ensure apt packages are installed
+  yum:
+    pkg={{ item }}
+    state=present
+  with_items: '{{ yum_packages }}'
+

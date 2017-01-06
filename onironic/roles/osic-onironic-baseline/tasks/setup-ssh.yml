@@ -1,0 +1,22 @@
+---
+
+- name: Set the ssh servcie name
+  set_fact: ssh_service='sshd'
+  when: ansible_distribution == "CentOS"
+
+- name: Update ssh config to allow root ssh access
+  lineinfile: 
+    dest=/etc/ssh/sshd_config
+    regexp='^PermitRootLogin.*$'
+    line='PermitRootLogin yes'
+    state=present
+  notify: 
+    - restart ssh
+
+- name: Add SSH public keys to root user
+  authorized_key:
+    user=root
+    key="{{ item }}"
+  with_file:
+    - /root/.ssh/id_rsa.pub
+

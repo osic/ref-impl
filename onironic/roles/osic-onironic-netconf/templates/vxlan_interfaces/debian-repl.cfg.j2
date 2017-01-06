@@ -1,0 +1,13 @@
+auto br-repl
+iface br-repl inet static
+    address {{ repl_network.split('.')[0:2] | join('.') }}.{{ repl_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+    netmask  {{ repl_netmask }}
+    bridge_ports repl-mesh
+    bridge_stp off
+    pre-up ip link add repl-mesh type vxlan id {{ repl_vxlan }} group {{ vxlan_group }} ttl 4 dev {{ ansible_default_ipv4.interface }}
+    up sysctl -w net.ipv4.conf.repl-mesh.arp_notify=1
+    up sysctl -w net.ipv4.conf.br-repl.arp_notify=1
+    post-up ip link set br-repl address $(cat /sys/class/net/br-repl/address)
+    post-up ip link set repl-mesh up || true
+    down ip link set repl-mesh down || true
+    post-down ip link del repl-mesh

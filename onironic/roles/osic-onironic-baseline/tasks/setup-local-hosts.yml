@@ -1,0 +1,11 @@
+---
+
+- name: Add hosts to hosts file
+  lineinfile:
+    dest=/etc/hosts
+    line="{{ hostvars[item]['ansible_ssh_host'] }} {{ item }}"
+    state=present
+  run_once: true
+  with_items: hostvars
+  connection: local
+  when: inventory_hostname not in groups['deploy']

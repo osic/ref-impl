@@ -1,0 +1,48 @@
+[deploy]
+
+deploy ansible_ssh_user=root ansible_ssh_host=172.30.243.128 flavor=osic-baremetal-comp
+
+
+[controller]
+
+infra-1 ansible_ssh_user=root ansible_ssh_host=172.30.243.213 flavor=osic-baremetal-comp
+infra-2 ansible_ssh_user=root ansible_ssh_host=172.30.243.210 flavor=osic-baremetal-comp
+infra-3 ansible_ssh_user=root ansible_ssh_host=172.30.243.212 flavor=osic=baremetal-comp
+
+
+[compute]
+
+compute-1 ansible_ssh_user=root ansible_ssh_host=172.30.243.228 flavor=osic-baremetal-comp
+compute-2 ansible_ssh_user=root ansible_ssh_host=172.30.243.229 flavor=osic-baremetal-comp
+compute-3 ansible_ssh_user=root ansible_ssh_host=172.30.244.31 flavor=osic-baremetal-comp
+compute-4 ansible_ssh_user=root ansible_ssh_host=172.30.244.29 flavor=osic-baremetal-comp
+compute-5 ansible_ssh_user=root ansible_ssh_host=172.30.243.234 flavor=osic-baremetal-comp
+compute-6 ansible_ssh_user=root ansible_ssh_host=172.30.243.232 flavor=osic-baremetal-comp
+compute-7 ansible_ssh_user=root ansible_ssh_host=172.30.243.233 flavor=osic-baremetal-comp
+compute-8 ansible_ssh_user=root ansible_ssh_host=172.30.243.235 flavor=osic-baremetal-comp
+compute-9 ansible_ssh_user=root ansible_ssh_host=172.30.243.236 flavor=osic-baremetal-comp
+
+[logging]
+
+logger-1 ansible_ssh_user=root ansible_ssh_host=172.30.243.237 flavor=osic-baremetal-comp
+
+
+[network]
+
+network-1 ansible_ssh_user=root ansible_ssh_host=172.30.243.215 flavor=osic-baremetal-comp
+network-2 ansible_ssh_user=root ansible_ssh_host=172.30.243.238 flavor=osic-baremetal-comp
+
+
+[swift]
+
+swift-1 ansible_ssh_user=root ansible_ssh_host=172.30.243.216 flavor=osic-baremetal-object
+swift-2 ansible_ssh_user=root ansible_ssh_host=172.30.243.217 flavor=osic-baremetal-object
+swift-3 ansible_ssh_user=root ansible_ssh_host=172.30.243.218 flavor=osic-baremetal-object
+
+
+[cinder]
+
+cinder-1 ansible_ssh_user=root ansible_ssh_host=172.30.243.220 flavor=osic-baremetal-block
+cinder-2 ansible_ssh_user=root ansible_ssh_host=172.30.243.219 flavor=osic-baremetal-block
+cinder-3 ansible_ssh_user=root ansible_ssh_host=172.30.243.221 flavor=osic-baremetal-block
+

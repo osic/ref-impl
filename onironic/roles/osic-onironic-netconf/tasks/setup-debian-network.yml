@@ -1,0 +1,39 @@
+---
+- name: Create /etc/network/mesh-interfaces.d directory
+  file:
+    path="/etc/network/mesh-interfaces.d"
+    owner="root"
+    group="root"
+    mode=0755
+    state="directory"
+
+- name: Make host ip static
+  template:
+    src: debian-interfaces.cfg.j2
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+  register: intret
+
+- name: Make vxlan-bridge interfaces
+  template:
+    src: vxlan_interfaces/debian-{{ item }}.cfg.j2
+    dest: /etc/network/mesh-interfaces.d/{{ item }}.cfg
+    owner: root
+    group: root
+    mode: 0644
+  register: vxconfret
+  with_items:
+    - mgmt
+    - storage
+    - flat
+    - vlan
+    - tunnel
+    - repl
+
+- set_fact:
+    needs_reboot: true
+  when: vxconfret.changed or intret.changed
+
+- debug: var=needs_reboot

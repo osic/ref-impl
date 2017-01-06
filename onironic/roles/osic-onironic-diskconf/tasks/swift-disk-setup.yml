@@ -1,0 +1,55 @@
+---
+
+- name: Install xfsprogs package for ubuntu
+  apt:
+    name: xfsprogs
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install xfsprogs package for centos
+  yum:
+    name: xfsprogs
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Create /openstack dir
+  file:
+    path: /openstack
+    state: directory
+
+- name: Create a single lvm partition on each disk
+  shell: if [ ! -e "/dev/{{item}}1" ];  then parted /dev/{{ item }} -s mklabel gpt > /dev/null 2>&1; parted /dev/{{ item }} -s mkpart primary 1M 100% set 1 lvm on > /dev/null 2<&1; echo "RANPARTED"; fi
+  register: partresult
+  with_items: "{{ object_disks }}"
+  when: flavor == 'osic-baremetal-object'
+  changed_when: partresult.stdout == "RANPARTED"
+
+- name: Create xfs filesystem on target disk partition
+  filesystem:
+    dev: "/dev/{{ item }}1"
+    fstype: xfs
+    opts: "-f -i size=1024 -L {{ item }}"
+    force: "no"
+  with_items: "{{ object_disks }}"
+  when: flavor == 'osic-baremetal-object'
+
+- name: Add the mount to the fstab
+  mount: 
+    name: "/srv/node/{{ item }}"
+    src: "LABEL={{ item }}"
+    state: present
+    fstype: xfs
+    opts: noatime,nodiratime,nobarrier,logbufs=8,noauto
+  with_items: "{{ object_disks }}"
+  when: flavor == 'osic-baremetal-object'
+
+- name: Mount it
+  mount: 
+    name: "/srv/node/{{ item }}"
+    src: "LABEL={{ item }}"
+    state: mounted
+    fstype: xfs
+    opts: noatime,nodiratime,nobarrier,logbufs=8,noauto
+  with_items: "{{ object_disks }}"
+  when: flavor == 'osic-baremetal-object'
+

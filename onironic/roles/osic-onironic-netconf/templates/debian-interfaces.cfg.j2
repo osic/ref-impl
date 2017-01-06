@@ -1,0 +1,71 @@
+# Loop back
+auto lo
+iface lo inet loopback
+
+# Bond slave1
+auto p1p1
+iface p1p1 inet manual
+    pre-up ip link set $IFACE up
+    post-down ip link set $IFACE down
+    bond-master bond0
+    mtu 9000
+
+# Bond slave2
+auto p4p1
+iface p4p1 inet manual
+    pre-up sleep 4
+    bond-master bond0
+    mtu 9000
+
+
+{% if ansible_default_ipv4.type == "bridge" %}
+
+# Bond
+auto bond0
+iface bond0 inet manual
+    bond-mode 4
+    bond_xmit_hash_policy layer3+4
+    bond-lacp-rate 1
+    bond-miimon 100
+    bond-downdelay 200
+    bond-updelay 200
+    bond-slaves p1p1 p4p1
+    mtu 9000
+
+# Bridge
+auto {{ ansible_default_ipv4.interface }}
+iface {{ ansible_default_ipv4.interface }} inet static
+    bridge_ports bond0
+    bridge_fd 9
+    bridge_hello 2
+    bridge_maxage 12
+    bridge_stp off
+    address {{ ansible_default_ipv4['address'] }}
+    netmask {{ ansible_default_ipv4['netmask'] }}
+    gateway {{ ansible_default_ipv4['gateway'] }}
+    dns-nameservers {{ dns1 }} {{ dns2 }}
+
+{% else %}
+
+# Bond
+auto bond0
+iface bond0 inet static
+    bond-mode 4
+    bond_xmit_hash_policy layer3+4
+    bond-lacp-rate 1
+    bond-miimon 100
+    bond-downdelay 200
+    bond-updelay 200
+    bond-slaves p1p1 p4p1
+    mtu 9000
+    address {{ ansible_default_ipv4['address'] }}
+    netmask {{ ansible_default_ipv4['netmask'] }}
+    gateway {{ ansible_default_ipv4['gateway'] }}
+    dns-nameservers {{ dns1 }} {{ dns2 }}
+
+{% endif %}
+
+
+
+# include config files in interfaces.d
+source /etc/network/mesh-interfaces.d/*.cfg

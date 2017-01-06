@@ -1,0 +1,43 @@
+---
+
+# Check to see if you are passing your variables along
+- name: check to see if the variables are set and fail if needed
+  fail: msg="Specify a variable file with -e @/path/to/file"
+  when: not vxlan_group
+
+
+# Get some info to prep for the vxlan configs. 
+# We are mathing the network sizes with the ironic network size to keep ip's close to the ironic one for ease of
+# management.
+- set_fact:
+    third_oct_diff: "{{ ansible_default_ipv4.address.split('.')[2]|int - ansible_default_ipv4.network.split('.')[2]|int }} "
+    last_oct: "{{ ansible_default_ipv4.address.split('.')[-1] }}"
+
+
+# Set up networking for a Debian box
+- include: setup-debian-network.yml
+  when: ansible_distribution == "Ubuntu"
+
+# Set up networking for a Redhat box
+- include: setup-redhat-network.yml
+  when: ansible_distribution == "CentOS"
+
+# Reboot and wait if needed(save the deploy hosts for last as you will be kicked out during the reboot)
+- name: Reboot the openstack servers if needed.
+  shell: sleep 5 && shutdown -r now "Ansible triggered shutdown"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when: needs_reboot == true and inventory_hostname not in groups['deploy']
+
+- name: Wait for the servers to come back online
+  local_action: wait_for port=22 host={{ ansible_ssh_host }} search_regex=OpenSSH delay=60 state=started timeout=600
+  when: needs_reboot == true and inventory_hostname not in groups['deploy']
+
+- name: Reboot the deploy server if needed.
+  shell: sleep 5 && shutdown -r now "Ansible triggered shutdown"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when: needs_reboot == true and inventory_hostname in groups['deploy']
+

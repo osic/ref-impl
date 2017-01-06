@@ -1,0 +1,13 @@
+auto br-mgmt
+iface br-mgmt inet static
+    address {{ mgmt_network.split('.')[0:2] | join('.') }}.{{ mgmt_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+    netmask  {{ mgmt_netmask }}
+    bridge_ports mgmt-mesh
+    bridge_stp off
+    pre-up ip link add mgmt-mesh type vxlan id {{ mgmt_vxlan }} group {{ vxlan_group }} ttl 4 dev {{ ansible_default_ipv4.interface }}
+    up sysctl -w net.ipv4.conf.mgmt-mesh.arp_notify=1
+    up sysctl -w net.ipv4.conf.br-mgmt.arp_notify=1
+    post-up ip link set br-mgmt address $(cat /sys/class/net/br-mgmt/address)
+    post-up ip link set mgmt-mesh up || true
+    down ip link set mgmt-mesh down || true
+    post-down ip link del mgmt-mesh

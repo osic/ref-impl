@@ -1,0 +1,11 @@
+[deploy]
+
+nettest ansible_ssh_user=ubuntu ansible_ssh_host=172.30.244.43 flavor=osic-baremetal-comp
+
+[nettest]
+
+nettestxenial ansible_ssh_user=ubuntu ansible_ssh_host=172.30.244.48 flavor=osic-baremetal-comp
+nettestcentos ansible_ssh_user=centos ansible_ssh_host=172.30.244.45 flavor=osic-baremetal-comp
+
+
+

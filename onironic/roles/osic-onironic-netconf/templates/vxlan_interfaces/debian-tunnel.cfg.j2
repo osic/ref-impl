@@ -1,0 +1,13 @@
+auto br-tunnel
+iface br-tunnel inet static
+    address {{ tunnel_network.split('.')[0:2] | join('.') }}.{{ tunnel_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+    netmask  {{ tunnel_netmask }}
+    bridge_ports tunnel-mesh
+    bridge_stp off
+    pre-up ip link add tunnel-mesh type vxlan id {{ tunnel_vxlan }} group {{ vxlan_group }} ttl 4 dev {{ ansible_default_ipv4.interface }}
+    up sysctl -w net.ipv4.conf.tunnel-mesh.arp_notify=1
+    up sysctl -w net.ipv4.conf.br-tunnel.arp_notify=1
+    post-up ip link set br-tunnel address $(cat /sys/class/net/br-tunnel/address)
+    post-up ip link set tunnel-mesh up || true
+    down ip link set tunnel-mesh down || true
+    post-down ip link del tunnel-mesh
