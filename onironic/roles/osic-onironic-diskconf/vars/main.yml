@@ -1,0 +1,23 @@
+---
+
+# Disks used in all non-storage devices(flavor osic-baremetal-comp)
+non_storage_lxc_disk: "sdc"
+
+# Disks used in swift/ceph devices(flavor osic-baremetal-object)
+object_disks:
+  - "sdb"
+  - "sdc"
+  - "sdd"
+  - "sde"
+  - "sdf"
+  - "sdg"
+  - "sdh"
+  - "sdi"
+  - "sdj"
+  - "sdk"
+
+
+# Disks used in cinder devices(flavor osic-baremetal-block)
+block_lxc_disk: "sdb"
+
+block_volumes_disk: "sdc"

@@ -1,0 +1,17 @@
+---
+
+# Run for any non-storage type device(set up the lxc openstack volume)
+- include: non-storage-disk-setup.yml
+  when: disk_action == 'non-storage-disk-setup'
+
+# Run for any compute device(set up the volumes for compute vms)
+- include: compute-disk-setup.yml
+  when: disk_action == 'compute-disk-setup'
+
+# Run for cinder block device setup
+- include: cinder-disk-setup.yml
+  when: disk_action == 'cinder-disk-setup'
+
+# Run for swift object device setup
+- include: swift-disk-setup.yml
+  when: disk_action == 'swift-disk-setup'

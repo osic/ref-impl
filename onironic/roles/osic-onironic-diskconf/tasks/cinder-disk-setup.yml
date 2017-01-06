@@ -1,0 +1,72 @@
+---
+
+- name: Check if cinder lxc disk partition already exists
+  stat: path="/dev/{{ block_lxc_disk }}1"
+  register: st
+  when: flavor == 'osic-baremetal-block'
+
+- name: Create a single lvm partitions on the cinder lxc disk
+  shell: parted /dev/{{ block_lxc_disk }} -s mklabel gpt; parted /dev/{{ block_lxc_disk }} -s mkpart primary 1M 100% set 1 lvm on
+  when: flavor == 'osic-baremetal-block' and st.stat.exists == false
+
+- name: Create lxc volume group from the new cinder lxc partition
+  lvg: 
+    vg: lxc
+    state: present
+    force: no
+    pvs: "/dev/{{ block_lxc_disk }}1"
+  when: flavor == 'osic-baremetal-block'
+
+- name: Create openstack00 volume on lxc volume group
+  lvol:
+    #active: yes
+    lv: openstack00
+    vg: lxc
+    state: present
+    size: 72G
+  when: flavor == 'osic-baremetal-block'
+
+- name: Create ext4 filesystem on target disk partition
+  filesystem:
+    dev: "/dev/mapper/lxc-openstack00"
+    fstype: ext4
+    force: "no"
+  when: flavor == 'osic-baremetal-block'
+
+- name: Add the mount to the fstab
+  mount: 
+    name: "/openstack"
+    src: "/dev/mapper/lxc-openstack00"
+    state: present
+    fstype: ext4
+    opts: defaults
+  when: flavor == 'osic-baremetal-block'
+
+- name: Mount it
+  mount: 
+    name: "/openstack"
+    src: "/dev/mapper/lxc-openstack00"
+    state: mounted
+    fstype: ext4
+    opts: defaults
+  when: flavor == 'osic-baremetal-block'
+
+
+- name: Check if cinder volumes disk partition already exists
+  stat: path="/dev/{{ block_volumes_disk }}1"
+  register: st
+  when: flavor == 'osic-baremetal-block'
+
+- name: Create a single lvm partition on the volumes disk if it doesn't exist
+  shell: parted /dev/{{ block_volumes_disk }} -s mklabel gpt; parted /dev/{{ block_volumes_disk }} -s mkpart primary 1M 100% set 1 lvm on
+  when: flavor == 'osic-baremetal-block' and st.stat.exists == false
+
+- name: Create cinder-volumes volume group from the new cinder volumes disk partition
+  lvg: 
+    vg: cinder-volumes
+    state: present
+    force: no
+    pvs: "/dev/{{ block_volumes_disk }}1"
+  when: flavor == 'osic-baremetal-block'
+
+

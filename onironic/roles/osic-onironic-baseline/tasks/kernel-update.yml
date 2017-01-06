@@ -1,0 +1,25 @@
+- name: Update to the latest linux-generic-lts-xenial kernel on ubuntu
+  apt:
+    name: linux-generic-lts-xenial
+    state: latest
+  register: kernel_update_ubuntu
+  when: ansible_distribution == "Ubuntu"
+
+- name: Update to the latest kernel on centos
+  yum:
+    name: kernel
+    state: latest
+  register: kernel_update_centos
+  when: ansible_distribution == "CentOS"
+
+- name: Reboot the openstack servers if needed.
+  shell: sleep 5 && shutdown -r now "Ansible triggered shutdown"
+  async: 1
+  poll: 0
+  ignore_errors: true
+  when: kernel_update_ubuntu.changed or kernel_update_centos.changed
+
+- name: Wait for the servers to come back online
+  local_action: wait_for port=22 host={{ ansible_ssh_host }} search_regex=OpenSSH delay=60 state=started timeout=600
+  when: kernel_update_ubuntu.changed or kernel_update_centos.changed
+

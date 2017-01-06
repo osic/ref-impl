@@ -1,0 +1,13 @@
+auto br-storage
+iface br-storage inet static
+    address {{ storage_network.split('.')[0:2] | join('.') }}.{{ storage_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+    netmask  {{ storage_netmask }}
+    bridge_ports storage-mesh
+    bridge_stp off
+    pre-up ip link add storage-mesh type vxlan id {{ storage_vxlan }} group {{ vxlan_group }} ttl 4 dev {{ ansible_default_ipv4.interface }}
+    up sysctl -w net.ipv4.conf.storage-mesh.arp_notify=1
+    up sysctl -w net.ipv4.conf.br-storage.arp_notify=1
+    post-up ip link set br-storage address $(cat /sys/class/net/br-storage/address)
+    post-up ip link set storage-mesh up || true
+    down ip link set storage-mesh down || true
+    post-down ip link del storage-mesh

@@ -1,0 +1,10 @@
+---
+- name: "Ensure kernel module(s) loaded at boot"
+  lineinfile:
+    dest: /etc/modprobe.d/osic_prep.conf
+    line: "{{ item }}"
+    create: yes
+  with_items:
+    - bonding
+    - 8021q
+

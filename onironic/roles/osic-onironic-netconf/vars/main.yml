@@ -1,0 +1,6 @@
+---
+
+dns1: 8.8.8.8
+dns2: 74.82.42.42
+
+needs_reboot: false

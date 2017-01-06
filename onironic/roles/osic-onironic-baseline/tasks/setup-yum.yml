@@ -1,0 +1,9 @@
+---
+
+- name: Copy repo file over
+  copy:
+    src: hp-mcp.repo
+    dest: /etc/yum.repos.d/hp-mcp.repo
+    owner: root
+    group: root
+    mode: 0644

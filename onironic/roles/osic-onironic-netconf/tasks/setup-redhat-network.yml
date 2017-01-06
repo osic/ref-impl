@@ -1,0 +1,55 @@
+---
+- name: Make host ip static
+  template:
+    src: centos-ifcfg-bond0.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-bond0
+    owner: root
+    group: root
+    mode: 0644
+  register: intret
+
+
+- name: Set up resolv.conf
+  template:
+    src: centos-resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: root
+    group: root
+    mode: 0644
+  register: intretdns
+
+- name: Make bridge interfaces
+  template:
+    src: vxlan_interfaces/centos-ifcfg-br-{{ item }}.j2
+    dest: /etc/sysconfig/network-scripts/ifcfg-br-{{ item }}
+    owner: root
+    group: root
+    mode: 0644
+  register: brconfret
+  with_items:
+    - mgmt
+    - storage
+    - flat
+    - vlan
+    - tunnel
+    - repl
+
+- name: Set up ifup-local/ifdown-local scripts for vxlan interface configuration
+  template:
+    src: sbin/if{{ item }}-local.j2
+    dest: /sbin/if{{ item }}-local
+    owner: root
+    group: root
+    mode: 0755
+  with_items:
+    - up
+    - down
+  register: lconfret
+  
+
+- set_fact:
+    needs_reboot: true
+  when: brconfret.changed or intretdns.changed or intret.changed or lconfret.changed
+
+- debug: var=needs_reboot
+

@@ -1,0 +1,7 @@
+[hp-mcp]
+name=HP Software Delivery Repository for mcp
+baseurl=http://downloads.linux.hpe.com/SDR/repo/mcp/CentOS/7.0/x86_64/current/
+enabled=1
+#gpgcheck=0
+gpgcheck=1
+gpgkey=http://downloads.linux.hpe.com/SDR/repo/mcp/GPG-KEY-mcp

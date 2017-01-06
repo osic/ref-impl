@@ -1,0 +1,32 @@
+# usage: ansible-playbook -i inventory/hosts -e @../playbooks/vars/proj_vlan_network_mapping.yml prep-onironic-boxes.yml
+
+---
+
+- name: Prepare ironic hosts disks with flavor 'osic-baremetal-comp' in non-storage devices
+  hosts: 'all:!cinder:!swift:!ceph'
+  become: yes
+  become_user: root
+  roles:
+    - { role: osic-onironic-diskconf, disk_action: 'non-storage-disk-setup' }
+
+- name: Prepare ironic hosts disks with flavor 'osic-baremetal-comp' in the compute group
+  hosts: 'compute'
+  become: yes
+  become_user: root
+  roles:
+    - { role: osic-onironic-diskconf, disk_action: 'compute-disk-setup' }
+
+- name: Prepare ironic host disks with flavor 'osic-baremetal-block' and under the 'cinder' group
+  hosts: 'cinder'
+  become: yes
+  become_user: root
+  roles:
+    - { role: osic-onironic-diskconf, disk_action: 'cinder-disk-setup' }
+
+- name: Prepare ironic host disks with flavor 'osic-baremetal-object' and under the 'swift' group
+  hosts: 'swift'
+  become: yes
+  become_user: root
+  roles:
+    - { role: osic-onironic-diskconf, disk_action: 'swift-disk-setup' }
+

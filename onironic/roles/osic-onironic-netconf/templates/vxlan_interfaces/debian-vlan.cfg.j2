@@ -1,0 +1,13 @@
+auto br-vlan
+iface br-vlan inet static
+    address {{ vlan_network.split('.')[0:2] | join('.') }}.{{ vlan_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+    netmask  {{ vlan_netmask }}
+    bridge_ports vlan-mesh
+    bridge_stp off
+    pre-up ip link add vlan-mesh type vxlan id {{ vlan_vxlan }} group {{ vxlan_group }} ttl 4 dev {{ ansible_default_ipv4.interface }}
+    up sysctl -w net.ipv4.conf.vlan-mesh.arp_notify=1
+    up sysctl -w net.ipv4.conf.br-vlan.arp_notify=1
+    post-up ip link set br-vlan address $(cat /sys/class/net/br-vlan/address)
+    post-up ip link set vlan-mesh up || true
+    down ip link set vlan-mesh down || true
+    post-down ip link del vlan-mesh

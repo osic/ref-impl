@@ -1,0 +1,13 @@
+---
+- name: Ping to see if python is set up for xenial devices(should pass on trusty and centos7)
+  ping:
+  register: testret
+  ignore_errors: yes
+
+- name: Update the cache
+  raw: apt-get update
+  when: testret.failed is defined and testret.failed and 'not found' in testret.module_stderr
+
+- name: Install python
+  raw: apt-get -y install python
+  when: testret.failed is defined and testret.failed and 'not found' in testret.module_stderr

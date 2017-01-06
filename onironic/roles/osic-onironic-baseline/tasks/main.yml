@@ -1,0 +1,29 @@
+---
+
+# Add hosts to the local /etc/hosts file from inventory
+- include: setup-local-hosts.yml
+
+# Set up ssh connectivity from the deployment box to the host
+- include: setup-ssh.yml
+
+# Set up the hp repositories and install needed packages
+- include: setup-apt.yml
+  when: ansible_distribution == "Ubuntu"
+
+- include: setup-yum.yml
+  when: ansible_distribution == "CentOS"
+
+- include: install-apt-packages.yml
+  when: ansible_distribution == "Ubuntu"
+
+- include: install-yum-packages.yml
+  when: ansible_distribution == "CentOS"
+
+
+# Set up any needed kernel modules to be loaded on boot
+- include: load-kernel-modules.yml
+
+
+# Load the xenial kernel for trusty
+- include: kernel-update.yml
+

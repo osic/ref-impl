@@ -1,0 +1,36 @@
+---
+
+- name: Create nova00 volume on lxc volume group
+  lvol:
+    #active: yes
+    lv: nova00
+    vg: lxc
+    state: present
+    size: 2T
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Create ext4 filesystem on target disk partition
+  filesystem:
+    dev: "/dev/mapper/lxc-nova00"
+    fstype: ext4
+    force: "no"
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Add the mount to the fstab
+  mount: 
+    name: "/var/lib/nova"
+    src: "/dev/mapper/lxc-nova00"
+    state: present
+    fstype: ext4
+    opts: defaults
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Mount it
+  mount: 
+    name: "/var/lib/nova"
+    src: "/dev/mapper/lxc-nova00"
+    state: mounted
+    fstype: ext4
+    opts: defaults
+  when: flavor == 'osic-baremetal-comp'
+

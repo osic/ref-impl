@@ -1,0 +1,24 @@
+[deploy]
+
+testdiskcomp   ansible_ssh_user=centos ansible_ssh_host=172.30.244.103 flavor=osic-baremetal-comp
+
+
+[disktest]
+
+testdiskblock  ansible_ssh_user=centos ansible_ssh_host=172.30.244.106 flavor=osic-baremetal-block
+testdiskobject ansible_ssh_user=centos ansible_ssh_host=172.30.244.105 flavor=osic-baremetal-object
+
+
+[cinder]
+
+testdiskblock  ansible_ssh_user=centos ansible_ssh_host=172.30.244.106 flavor=osic-baremetal-block
+
+
+[swift]
+
+testdiskobject ansible_ssh_user=centos ansible_ssh_host=172.30.244.105 flavor=osic-baremetal-object
+
+[compute]
+
+testdiskcomp   ansible_ssh_user=centos ansible_ssh_host=172.30.244.103 flavor=osic-baremetal-comp
+

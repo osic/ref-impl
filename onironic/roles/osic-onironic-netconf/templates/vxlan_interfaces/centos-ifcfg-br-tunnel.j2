@@ -1,0 +1,7 @@
+DEVICE=br-tunnel
+TYPE=Bridge
+IPADDR={{ tunnel_network.split('.')[0:2] | join('.') }}.{{ tunnel_network.split('.')[2]|int + third_oct_diff|int }}.{{ ansible_ssh_host.split('.')[-1] }}
+NETMASK={{ tunnel_netmask }}
+ONBOOT=yes
+NM_CONTROLLED=no
+DELAY=0

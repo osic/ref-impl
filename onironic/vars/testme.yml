@@ -1,0 +1,26 @@
+vxlan_group: 239.51.50.239
+
+mgmt_vxlan: 12152361
+mgmt_network: 172.22.0.0/20
+mgmt_netmask: 255.255.240.0
+
+storage_vxlan: 12152362
+storage_network: 172.22.16.0/20
+storage_netmask: 255.255.240.0
+
+flat_vxlan: 12152363
+flat_network: 172.22.32.0/20
+flat_netmask: 255.255.240.0
+
+vlan_vxlan: 12152364
+vlan_network: 172.22.48.0/20
+vlan_netmask: 255.255.240.0
+
+tunnel_vxlan: 12152365
+tunnel_network: 172.22.64.0/20
+tunnel_netmask: 255.255.240.0
+
+repl_vxlan: 12152366
+repl_network: 172.22.80.0/20
+repl_netmask: 255.255.240.0
+

@@ -1,0 +1,26 @@
+# usage: ansible-playbook -i inventory/hosts -e @../playbooks/vars/proj_vlan_network_mapping.yml prep-onironic-boxes.yml
+
+---
+- name: The xenial images do not have python installed. Set it up if needed.
+  hosts: 'all'
+  remote_user: root
+  become: yes
+  gather_facts: false
+  roles:
+    - osic-onironic-checkpython
+
+- name: Run some general baseline configs
+  hosts: 'all'
+  remote_user: root
+  become: yes
+  gather_facts: true
+  roles:
+    - osic-onironic-baseline
+
+- name: Set up networking for the current ironic flavors in cloud1
+  hosts: 'all'
+  remote_user: root
+  become: yes
+  gather_facts: true
+  roles:
+    - osic-onironic-netconf

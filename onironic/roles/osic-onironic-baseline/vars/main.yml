@@ -1,0 +1,76 @@
+---
+
+hosts_line: ''
+
+# we will leave at ssh and change to sshd if centos later on
+sshservice: ssh
+
+
+# repos. need the hp one.  most of the others were copied over from an existing script, so I'm not sure if they are 100% needed.
+repos: {
+  trusty: [
+    'deb http://archive.ubuntu.com/ubuntu trusty main restricted',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty main restricted',
+    'deb http://archive.ubuntu.com/ubuntu trusty-updates main restricted',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty-updates main restricted',
+    'deb http://archive.ubuntu.com/ubuntu trusty universe',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty universe',
+    'deb http://archive.ubuntu.com/ubuntu trusty-updates universe',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty-updates universe',
+    'deb http://archive.ubuntu.com/ubuntu trusty multiverse',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty multiverse',
+    'deb http://archive.ubuntu.com/ubuntu trusty-updates multiverse',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty-updates multiverse',
+    'deb http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse',
+    'deb-src http://archive.ubuntu.com/ubuntu trusty-backports main restricted universe multiverse',
+    'deb http://downloads.linux.HPE.com//SDR/downloads/ManagementComponentPack trusty/current non-free'
+      ],
+  xenial: [
+    'deb http://downloads.linux.HPE.com//SDR/downloads/ManagementComponentPack xenial/current non-free'
+      ],
+  }
+
+
+# hp repo keys to import
+hpkeys:
+  - "https://downloads.linux.hpe.com/SDR/hpePublicKey2048_key1.pub"
+  - "http://downloads.linux.hpe.com/SDR/hpPublicKey2048_key1.pub"
+  - "http://downloads.linux.hpe.com/SDR/hpPublicKey2048.pub"
+  - "http://downloads.linux.hpe.com/SDR/hpPublicKey1024.pub"
+  - "http://downloads.linux.hpe.com/SDR/downloads/ManagementComponentPack/hpPublicKey2048_key1.pub"
+
+
+# List of packages to install
+
+apt_packages:
+  - 'vim'
+  - 'vlan'
+  - 'ifenslave'
+  - 'ifenslave-2.6'
+  - 'bridge-utils'
+  - 'lsof'
+  - 'lvm2'
+  - 'ntp'
+  - 'ntpdate'
+  - 'openssh-server'
+  - 'sudo'
+  - 'tcpdump'
+  - 'debootstrap'
+  - 'hpssacli'
+
+yum_packages:
+  - 'vim-enhanced'
+  - 'vconfig'
+  - 'iputils'
+  - 'bridge-utils'
+  - 'lsof'
+  - 'lvm2'
+  - 'ntp'
+  - 'ntpdate'
+  - 'openssh-server'
+  - 'sudo'
+  - 'tcpdump'
+  - 'debootstrap'
+  - 'hpssacli'
+
+

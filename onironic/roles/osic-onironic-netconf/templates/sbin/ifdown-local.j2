@@ -1,0 +1,43 @@
+#!/bin/bash
+
+
+function setup_vxlan_interface {
+   inttype=$1
+   vxlanid=$2
+
+
+   # Remove it from the existing bridge
+   brctl delif br-${inttype} ${inttype}-mesh
+
+   # Bring down the interface
+   ip link set ${inttype}-mesh down || true
+
+   # Delete the vxlan interface and attach to the primary interface
+   ip link del ${inttype}-mesh type vxlan id ${vxlanid} group 239.51.50.239 ttl 4 dev bond0 dstport 0 > /dev/null 2>&1 || true
+
+}
+
+
+# Only set up vxlan interfaces for those needed skip anything else.
+case "$1" in
+br-mgmt)
+    setup_vxlan_interface mgmt {{ mgmt_vxlan }}
+    ;;
+br-storage)
+    setup_vxlan_interface storage {{ storage_vxlan }}
+    ;;
+br-flat)
+    setup_vxlan_interface flat {{ flat_vxlan }}
+    ;;
+br-tunnel)
+    setup_vxlan_interface tunnel {{ tunnel_vxlan }}
+    ;;
+br-repl)
+    setup_vxlan_interface repl {{ repl_vxlan }}
+    ;;
+br-vlan)
+    setup_vxlan_interface vlan {{ vlan_vxlan }}
+    ;;
+*)
+    ;;
+esac

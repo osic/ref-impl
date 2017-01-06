@@ -1,0 +1,53 @@
+---
+
+- name: Check if lxc disk partition 1 already exists
+  stat: path="/dev/{{ non_storage_lxc_disk }}1"
+  register: st
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Create a single lvm partition on the lxc disk
+  shell: parted /dev/{{ non_storage_lxc_disk }} -s mklabel gpt; parted /dev/{{ non_storage_lxc_disk }} -s mkpart primary 1M 100% set 1 lvm on
+  when: flavor == 'osic-baremetal-comp' and st.stat.exists == false
+
+- name: Create lxc volume group from the new partition
+  lvg: 
+    vg: lxc
+    state: present
+    force: no
+    pvs: "/dev/{{ non_storage_lxc_disk }}1"
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Create openstack00 volume on lxc volume group
+  lvol:
+    #active: yes
+    lv: openstack00
+    vg: lxc
+    state: present
+    size: 72G
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Create ext4 filesystem on target disk partition
+  filesystem:
+    dev: "/dev/mapper/lxc-openstack00"
+    fstype: ext4
+    force: "no"
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Add the mount to the fstab
+  mount: 
+    name: "/openstack"
+    src: "/dev/mapper/lxc-openstack00"
+    state: present
+    fstype: ext4
+    opts: defaults
+  when: flavor == 'osic-baremetal-comp'
+
+- name: Mount it
+  mount: 
+    name: "/openstack"
+    src: "/dev/mapper/lxc-openstack00"
+    state: mounted
+    fstype: ext4
+    opts: defaults
+  when: flavor == 'osic-baremetal-comp'
+
