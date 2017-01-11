@@ -2,8 +2,8 @@
 auto lo
 iface lo inet loopback
 
-auto p1p1
-iface p1p1 inet manual
+auto {{ ansible_default_ipv4['interface'] }}
+iface {{ ansible_default_ipv4['interface'] }} inet manual
 
 # Container Bridge
 auto br-pxe
@@ -12,7 +12,7 @@ address {{ pxe_network.split('.')[0:3] | join('.') }}.{{ ansible_ssh_host.split(
 netmask 255.255.252.0
 gateway {{ pxe_network.split('.')[0:3] | join('.') }}.1
 dns-nameservers 8.8.8.8 8.8.4.4
-bridge_ports p1p1
+bridge_ports {{ ansible_default_ipv4['interface'] }}
 bridge_stp off
 bridge_waitport 0
 bridge_fd 0
